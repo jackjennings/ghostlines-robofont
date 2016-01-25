@@ -4,7 +4,7 @@ require 'rake/tasklib'
 require 'active_support'
 
 module Rake
-  module Robofont
+  module RoboFont
     class BuildTask < TaskLib
 
       def initialize extension_name
