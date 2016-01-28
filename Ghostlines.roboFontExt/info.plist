@@ -15,10 +15,10 @@
 	<key>mainScript</key>
 	<string>_startup.py</string>
 	<key>name</key>
-	<string>Ghostlines</string>
+	<string>Ghostlines (Beta)</string>
 	<key>timeStamp</key>
-	<real>1453967408.7835178</real>
+	<real>1454003682.1361148</real>
 	<key>version</key>
-	<string>0.1.0</string>
+	<string>0.0.1</string>
 </dict>
 </plist>
