@@ -1,9 +1,11 @@
 import os
 import tempfile
+import requests
 
 from vanilla import Window, List, Button, Sheet, EditText, TextBox
 from vanilla.dialogs import message
 from defconAppKit.windows.baseWindow import BaseWindowController
+from defconAppKit.windows.progressWindow import ProgressWindow
 
 from ghostlines.lazy_property import lazy_property
 from ghostlines.api import Ghostlines
@@ -42,15 +44,29 @@ class UFODeliveryWindow(BaseWindowController):
     def send(self, sender):
         recipients = ', '.join(self.window.recipients.get())
 
-        tmpdir = tempfile.mkdtemp(prefix="ghostlines")
+        progress = ProgressWindow('', tickCount=3, parentWindow=self.window)
 
-        # Should be controlled which options are used somewhere
-        filename = os.path.join(tmpdir, self.font.info.familyName + '.otf')
+        try:
+            tmpdir = tempfile.mkdtemp(prefix="ghostlines")
 
-        self.font.generate(filename, "otf", decompose=True, checkOutlines=True, autohint=True)
+            progress.update('Generating OTF')
 
-        with open(filename, 'rb') as otf:
-            Ghostlines('v0.1').send(otf=otf, recipients=recipients)
+            # Should be controlled which options are used somewhere
+            filename = os.path.join(tmpdir, self.font.info.familyName + '.otf')
+
+            self.font.generate(filename, "otf", decompose=True, checkOutlines=True, autohint=True)
+
+            progress.update('Sending via Ghostlines')
+
+            with open(filename, 'rb') as otf:
+                response = Ghostlines('v0.1').send(otf=otf, recipients=recipients)
+
+            if response.status_code == requests.codes.created:
+                message("{} was delivered".format(self.font.info.familyName))
+            else:
+                message("{} could not be delivered".format(self.font.info.familyName), "Error code: {}".format(response.status_code))
+        finally:
+            progress.close()
 
     def remove_recipient(self, sender):
         for index in self.window.recipients.getSelection():
