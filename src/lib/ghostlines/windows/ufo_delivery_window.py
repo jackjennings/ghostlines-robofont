@@ -1,7 +1,7 @@
 import os
 import tempfile
 
-from vanilla import Window, List, Button, Sheet, EditText
+from vanilla import Window, List, Button, Sheet, EditText, TextBox
 from vanilla.dialogs import message
 from defconAppKit.windows.baseWindow import BaseWindowController
 
@@ -17,7 +17,10 @@ class UFODeliveryWindow(BaseWindowController):
         self.font = font
         self.items = FontRecipients(self.font)
 
-        self.window.recipients = List((15, 15, -15, -49), self.items)
+        self.window.designer = TextBox((15, 15, -15, 22), "Designer: {}".format(font.info.designer))
+        self.window.font_name = TextBox((15, 38, -15, 22), "Font: {}".format(font.info.familyName))
+
+        self.window.recipients = List((15, 70, -15, -49), self.items)
         self.window.send_button = Button((-135, -39, 120, 24), "Deliver", callback=self.send)
 
         self.window.add_recipient_button = Button((15, -39, 30, 24), "+", callback=self.add_recipient)
@@ -58,10 +61,10 @@ class UFODeliveryWindow(BaseWindowController):
     def add_recipient(self, sender):
         self.window.sheet = Sheet((250, 89), self.window)
         self.window.sheet.recipient = EditText((15, 15, -15, 22), "", placeholder="Email Address")
-        self.window.sheet.cancel_button = Button((-215, 52, 100, 22),
+        self.window.sheet.cancel_button = Button((-190, 52, 80, 22),
                                                  'Cancel',
                                                  callback=self.close_sheet)
-        self.window.sheet.create_button = Button((-115, 52, 100, 22),
+        self.window.sheet.create_button = Button((-95, 52, 80, 22),
                                                  'Add',
                                                  callback=self.create_recipient)
         self.window.sheet.setDefaultButton(self.window.sheet.create_button)
