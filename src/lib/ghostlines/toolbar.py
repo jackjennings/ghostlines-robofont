@@ -2,12 +2,14 @@ import os
 
 from AppKit import *
 from vanilla import *
-from vanilla.dialogs import message
 
 from mojo.UI import CurrentFontWindow
 from mojo.events import addObserver
+from mojo.roboFont import CurrentFont
 
 from lib.UI.toolbarGlyphTools import ToolbarGlyphTools
+
+from ghostlines.windows.ufo_delivery_window import UFODeliveryWindow
 
 class GhostlinesToolbar(object):
 
@@ -22,7 +24,7 @@ class GhostlinesToolbar(object):
         if window is None:
             return
         self.addToolbar(window, 'Deliver', 'ghostlinesUpload',
-                        'upload.pdf', self.hiWes, index=-2)
+                        'upload.pdf', self.openSender, index=-2)
 
     def addToolbar(self, window, label, identifier, filename, callback, index=-1):
         toolbarItems = window.getToolbarItems()
@@ -43,5 +45,5 @@ class GhostlinesToolbar(object):
                                  addStandardItems=False)
         vanillaWindow._window.toolbar().setDisplayMode_(displayMode)
 
-    def hiWes(self, sender):
-        message('Hi Wes')
+    def openSender(self, sender):
+        UFODeliveryWindow(CurrentFont()).open()
