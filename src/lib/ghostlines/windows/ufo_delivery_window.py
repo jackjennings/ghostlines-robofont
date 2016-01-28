@@ -57,7 +57,7 @@ class UFODeliveryWindow(BaseWindowController):
 
     def add_recipient(self, sender):
         self.window.sheet = Sheet((250, 89), self.window)
-        self.window.sheet.recipient = EditText((15, 15, -15, 22), '')
+        self.window.sheet.recipient = EditText((15, 15, -15, 22), "", placeholder="Email Address")
         self.window.sheet.cancel_button = Button((-215, 52, 100, 22),
                                                  'Cancel',
                                                  callback=self.close_sheet)
