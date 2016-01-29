@@ -3,3 +3,5 @@ name: Ghostlines (Beta)
 version: 0.0.1
 developer: Ghostlines
 developerURL: http://ghostlines.pm
+com.robofontmechanic.Mechanic:
+  repository: ghostlines/ghostlines-robofont

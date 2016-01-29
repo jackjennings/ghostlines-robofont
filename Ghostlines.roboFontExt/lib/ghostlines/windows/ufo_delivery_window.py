@@ -61,7 +61,7 @@ class UFODeliveryWindow(BaseWindowController):
             with open(filename, 'rb') as otf:
                 response = Ghostlines('v0.1').send(otf=otf, recipients=recipients)
 
-            if response.status_code == requests.codes.ok:
+            if response.status_code == requests.codes.created:
                 message("{} was delivered".format(self.font.info.familyName))
             else:
                 message("{} could not be delivered".format(self.font.info.familyName), "Error code: {}".format(response.status_code))

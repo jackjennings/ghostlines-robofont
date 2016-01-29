@@ -4,6 +4,11 @@
 <dict>
 	<key>addToMenu</key>
 	<array/>
+	<key>com.robofontmechanic.Mechanic</key>
+	<dict>
+		<key>repository</key>
+		<string>ghostlines/ghostlines-robofont</string>
+	</dict>
 	<key>developer</key>
 	<string>Ghostlines</string>
 	<key>developerURL</key>
@@ -17,7 +22,7 @@
 	<key>name</key>
 	<string>Ghostlines (Beta)</string>
 	<key>timeStamp</key>
-	<real>1454024977.58963</real>
+	<real>1454026308.771706</real>
 	<key>version</key>
 	<string>0.0.1</string>
 </dict>
