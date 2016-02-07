@@ -8,6 +8,8 @@
 	<dict>
 		<key>repository</key>
 		<string>ghostlines/ghostlines-robofont</string>
+		<key>summary</key>
+		<string>Integrated project management for type design</string>
 	</dict>
 	<key>developer</key>
 	<string>Ghostlines</string>
@@ -22,7 +24,7 @@
 	<key>name</key>
 	<string>Ghostlines (Beta)</string>
 	<key>timeStamp</key>
-	<real>1454026308.771706</real>
+	<real>1454867512.627552</real>
 	<key>version</key>
 	<string>0.0.1</string>
 </dict>
