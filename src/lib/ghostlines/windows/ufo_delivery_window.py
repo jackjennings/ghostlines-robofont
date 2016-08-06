@@ -19,8 +19,8 @@ class UFODeliveryWindow(BaseWindowController):
         self.font = font
         self.items = FontRecipients(self.font)
 
-        self.window.designer = TextBox((15, 15, -15, 22), "Designer: {}".format(font.info.designer))
-        self.window.font_name = TextBox((15, 38, -15, 22), "Font: {}".format(font.info.familyName))
+        self.window.font_name = TextBox((15, 15, -15, 22), "Font: {}".format(font.info.familyName))
+        self.window.designer = TextBox((15, 38, -15, 22), "Designer: {}".format(font.info.designer))
 
         self.window.recipients = List((15, 70, -15, -49), self.items)
         self.window.send_button = Button((-135, -39, 120, 24), "Deliver", callback=self.send)
