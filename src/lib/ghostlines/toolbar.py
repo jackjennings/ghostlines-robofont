@@ -21,10 +21,16 @@ class GhostlinesToolbar(object):
 
     def addFontToolbar(self, info):
         window = CurrentFontWindow()
+
         if window is None:
             return
-        self.addToolbar(window, 'Deliver', 'ghostlinesUpload',
-                        'upload.pdf', self.openSender, index=-2)
+
+        self.addToolbar(window,
+                        'Ghostines',
+                        'ghostlinesUpload',
+                        'upload.pdf',
+                        self.openSender,
+                        index=-2)
 
     def addToolbar(self, window, label, identifier, filename, callback, index=-1):
         toolbarItems = window.getToolbarItems()
