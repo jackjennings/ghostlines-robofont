@@ -2,7 +2,7 @@ import os
 import tempfile
 import requests
 
-from vanilla import Window, List, Button, Sheet, EditText, TextBox
+from vanilla import Window, List, Button, Sheet, EditText, TextBox, Group
 from vanilla.dialogs import message
 from defconAppKit.windows.baseWindow import BaseWindowController
 from defconAppKit.windows.progressWindow import ProgressWindow
@@ -10,25 +10,40 @@ from defconAppKit.windows.progressWindow import ProgressWindow
 from ghostlines.lazy_property import lazy_property
 from ghostlines.api import Ghostlines
 from ghostlines.font_recipients import FontRecipients
+from ghostlines.background import Background
+from ghostlines.applicant_list import ApplicantList
+from ghostlines.attribution_text import AttributionText
 
 full_requirements_message = "Both a family name and a designer need to be set in order to provide enough information in the email to your testers."
+
 
 class UFODeliveryWindow(BaseWindowController):
 
     def __init__(self, font):
         self.font = font
-        self.items = FontRecipients(self.font)
+        self.recipients = FontRecipients(self.font)
+        self.applicants = []
 
-        self.window.font_name = TextBox((15, 15, -15, 22), "Font: {}".format(font.info.familyName))
-        self.window.designer = TextBox((15, 38, -15, 22), "Designer: {}".format(font.info.designer))
+        self.window.background = Background((0, 0, -0, 48))
+        self.window.attribution = AttributionText((15, 15, -15, 22), font)
+        self.window.send_button = Button((-135, 12, 120, 24), "Deliver", callback=self.send)
 
-        self.window.recipients = List((15, 70, -15, -49), self.items)
-        self.window.send_button = Button((-135, -39, 120, 24), "Deliver", callback=self.send)
+        self.window.recipients = List((-285, 65, 270, -49), self.recipients)
+        self.window.add_recipient_button = Button((-285, -39, 30, 24), "+", callback=self.add_recipient)
+        self.window.remove_recipient_button = Button((-246, -39, 30, 24), "-", callback=self.remove_recipient)
 
-        self.window.add_recipient_button = Button((15, -39, 30, 24), "+", callback=self.add_recipient)
-        self.window.remove_recipient_button = Button((50, -39, 30, 24), "-", callback=self.remove_recipient)
+        self.window.applicants = ApplicantList((15, 65, 270, 220), self.font, self.applicants, self.recipients, after_approve=self.add_approved_applicant)
+
+        self.window.bind("became main", self.fetch_applicants)
 
         self.window.setDefaultButton(self.window.send_button)
+
+    def fetch_applicants(self, sender):
+        self.window.applicants.fetch()
+
+    def add_approved_applicant(self, email):
+        self.recipients.append(email)
+        self.window.recipients.set(self.recipients)
 
     def open(self):
         if not self.font.info.familyName:
@@ -70,9 +85,9 @@ class UFODeliveryWindow(BaseWindowController):
 
     def remove_recipient(self, sender):
         for index in self.window.recipients.getSelection():
-            del self.items[index]
+            del self.recipients[index]
 
-        self.window.recipients.set(self.items)
+        self.window.recipients.set(self.recipients)
 
     def add_recipient(self, sender):
         self.window.sheet = Sheet((250, 89), self.window)
@@ -93,8 +108,8 @@ class UFODeliveryWindow(BaseWindowController):
         email = self.window.sheet.recipient.get()
 
         if not email is '':
-            self.items.append(email)
-            self.window.recipients.set(self.items)
+            self.recipients.append(email)
+            self.window.recipients.set(self.recipients)
             self.close_sheet()
 
     @property
@@ -103,6 +118,6 @@ class UFODeliveryWindow(BaseWindowController):
 
     @lazy_property
     def window(self):
-        return Window((300, 300),
+        return Window((600, 300),
                       autosaveName=self.__class__.__name__,
                       title=self.title)
