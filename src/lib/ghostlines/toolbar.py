@@ -26,7 +26,7 @@ class GhostlinesToolbar(object):
             return
 
         self.addToolbar(window,
-                        'Ghostines',
+                        'Ghostlines',
                         'ghostlinesUpload',
                         'upload.pdf',
                         self.openSender,
