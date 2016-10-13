@@ -26,7 +26,7 @@ class UFODeliveryWindow(BaseWindowController):
 
         self.window.background = Background((0, 0, -0, 48))
         self.window.attribution = AttributionText((15, 15, -15, 22), font)
-        self.window.send_button = Button((-135, 12, 120, 24), "Deliver", callback=self.send)
+        self.window.send_button = Button((-135, 12, 120, 24), "Send Release", callback=self.send)
 
         self.window.recipients = List((-285, 65, 270, -49), self.recipients)
         self.window.add_recipient_button = Button((-285, -39, 30, 24), "+", callback=self.add_recipient)
