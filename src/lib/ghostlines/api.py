@@ -8,13 +8,16 @@ class Ghostlines(object):
     def __init__(self, version):
         self.version = version
 
-    def send(self, otf=None, recipients=None):
+    def send(self, otf=None, recipients=None, notes=None):
         if not otf and not recipients:
             return
 
         url = self.path('send')
         files = {'otf': otf}
-        data = {'recipients': recipients}
+        data = {
+            'recipients': recipients,
+            'notes': notes
+        }
 
         return requests.post(url, files=files, data=data)
 
