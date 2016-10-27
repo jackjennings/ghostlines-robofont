@@ -30,7 +30,7 @@ class UFODeliveryWindow(BaseWindowController):
         self.note_draft_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.release_notes_draft')
         self.email_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.designer_email_address')
 
-        self.window.background = Background((0, 0, -0, 230))
+        self.window.background = Background((0, 0, -0, 235))
         self.window.attribution = AttributionText((15, 15, -15, 22), font)
         self.window.send_button = Button((-135, 12, 120, 24), "Send Release", callback=self.send)
 
@@ -42,7 +42,8 @@ class UFODeliveryWindow(BaseWindowController):
         self.window.email_address_field = EmailAddressField((15, 193, -15, 22),
                                              storage=self.email_storage)
 
-        self.window.recipients = List((-285, 250, 270, -49), self.recipients)
+        self.window.recipients_label = TextBox((-285, 250, -15, 22), "Subscribers")
+        self.window.recipients = List((-285, 273, 270, -49), self.recipients)
         self.window.add_recipient_button = Button((-285, -39, 30, 24), "+", callback=self.add_recipient)
         self.window.remove_recipient_button = Button((-246, -39, 30, 24), "-", callback=self.remove_recipient)
 
