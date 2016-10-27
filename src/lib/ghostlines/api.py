@@ -8,7 +8,7 @@ class Ghostlines(object):
     def __init__(self, version):
         self.version = version
 
-    def send(self, otf=None, recipients=None, notes=None):
+    def send(self, otf=None, recipients=None, notes=None, designer_email_address=None):
         if not otf and not recipients:
             return
 
@@ -16,7 +16,8 @@ class Ghostlines(object):
         files = {'otf': otf}
         data = {
             'recipients': recipients,
-            'notes': notes
+            'notes': notes,
+            'designer_email_address': designer_email_address
         }
 
         return requests.post(url, files=files, data=data)

@@ -6,7 +6,6 @@ from vanilla import Window, List, Button, Sheet, EditText, TextBox, Group
 from vanilla.dialogs import message
 from defconAppKit.windows.baseWindow import BaseWindowController
 from defconAppKit.windows.progressWindow import ProgressWindow
-from AppKit import NSForegroundColorAttributeName, NSColor, NSAttributedString
 
 from ghostlines.lazy_property import lazy_property
 from ghostlines.api import Ghostlines
@@ -15,7 +14,9 @@ from ghostlines.background import Background
 from ghostlines.applicant_list import ApplicantList
 from ghostlines.attribution_text import AttributionText
 from ghostlines.notes_editor import NotesEditor
+from ghostlines.fields.email_address_field import EmailAddressField
 from ghostlines.lib_storage import LibStorage
+from ghostlines.text import WhiteText
 
 full_requirements_message = "Both a family name and a designer need to be set in order to provide enough information in the email to your testers."
 
@@ -27,25 +28,25 @@ class UFODeliveryWindow(BaseWindowController):
         self.recipients = FontRecipients(self.font)
         self.applicants = []
         self.note_draft_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.release_notes_draft')
+        self.email_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.designer_email_address')
 
-        self.window.background = Background((0, 0, -0, 175))
+        self.window.background = Background((0, 0, -0, 230))
         self.window.attribution = AttributionText((15, 15, -15, 22), font)
         self.window.send_button = Button((-135, 12, 120, 24), "Send Release", callback=self.send)
 
-        notes_label_text_attributes = {
-            NSForegroundColorAttributeName: NSColor.whiteColor()
-        }
-        notes_label_text = NSAttributedString.alloc().initWithString_attributes_("Release Notes", notes_label_text_attributes)
-
-        self.window.notes_field_label = TextBox((15, 52, -15, 22), notes_label_text)
+        self.window.notes_field_label = TextBox((15, 52, -15, 22), WhiteText("Release Notes"))
         self.window.notes_field = NotesEditor((15, 75, -15, 80),
                                               draft_storage=self.note_draft_storage)
 
-        self.window.recipients = List((-285, 195, 270, -49), self.recipients)
+        self.window.email_address_field_label = TextBox((15, 170, -15, 22), WhiteText("Contact Email Included in Release"))
+        self.window.email_address_field = EmailAddressField((15, 193, -15, 22),
+                                             storage=self.email_storage)
+
+        self.window.recipients = List((-285, 250, 270, -49), self.recipients)
         self.window.add_recipient_button = Button((-285, -39, 30, 24), "+", callback=self.add_recipient)
         self.window.remove_recipient_button = Button((-246, -39, 30, 24), "-", callback=self.remove_recipient)
 
-        self.window.applicants = ApplicantList((15, 195, 270, 235), self.font, self.applicants, self.recipients, after_approve=self.add_approved_applicant)
+        self.window.applicants = ApplicantList((15, 250, 270, 235), self.font, self.applicants, self.recipients, after_approve=self.add_approved_applicant)
 
         self.window.bind("became main", self.fetch_applicants)
 
@@ -90,7 +91,8 @@ class UFODeliveryWindow(BaseWindowController):
                 params = dict(
                     otf=otf,
                     recipients=recipients,
-                    notes=self.window.notes_field.get()
+                    notes=self.window.notes_field.get(),
+                    designer_email_address=self.window.email_address_field.get()
                 )
                 response = Ghostlines('v0.1').send(**params)
 
@@ -136,6 +138,6 @@ class UFODeliveryWindow(BaseWindowController):
 
     @lazy_property
     def window(self):
-        return Window((600, 445),
+        return Window((600, 500),
                       autosaveName=self.__class__.__name__,
                       title=self.title)
