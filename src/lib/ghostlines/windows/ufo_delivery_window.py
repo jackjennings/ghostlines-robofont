@@ -15,11 +15,19 @@ from ghostlines.applicant_list import ApplicantList
 from ghostlines.attribution_text import AttributionText
 from ghostlines.notes_editor import NotesEditor
 from ghostlines.fields.email_address_field import EmailAddressField
+from ghostlines.fields.file_upload_field import FileUploadField
 from ghostlines.lib_storage import LibStorage
 from ghostlines.text import WhiteText
 
 full_requirements_message = "Both a family name and a designer need to be set in order to provide enough information in the email to your testers."
 
+# TODO: Detect this mapping in a more sustainable way
+# or find out how to make filetype detection on the server more reliable
+filetypes = {
+    '.md': 'text/x-markdown',
+    '.pdf': 'application/pdf',
+    '.txt': 'text/plain'
+}
 
 class UFODeliveryWindow(BaseWindowController):
 
@@ -29,6 +37,7 @@ class UFODeliveryWindow(BaseWindowController):
         self.applicants = []
         self.note_draft_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.release_notes_draft')
         self.email_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.designer_email_address')
+        self.license_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.license_filepath')
 
         self.window.background = Background((0, 0, -0, 235))
         self.window.attribution = AttributionText((15, 15, -15, 22), font)
@@ -38,9 +47,13 @@ class UFODeliveryWindow(BaseWindowController):
         self.window.notes_field = NotesEditor((15, 75, -15, 80),
                                               draft_storage=self.note_draft_storage)
 
-        self.window.email_address_field_label = TextBox((15, 170, -15, 22), WhiteText("Contact Email Included in Release"))
-        self.window.email_address_field = EmailAddressField((15, 193, -15, 22),
+        self.window.email_address_field_label = TextBox((15, 170, 270, 22), WhiteText("Contact Email Included in Release"))
+        self.window.email_address_field = EmailAddressField((15, 193, 270, 22),
                                              storage=self.email_storage)
+
+        self.window.license_field_label = TextBox((-285, 170, -15, 22), WhiteText("License"))
+        self.window.license_field = FileUploadField((-285, 193, -15, 22),
+                                                    storage=self.license_storage)
 
         self.window.recipients_label = TextBox((-285, 250, -15, 22), "Subscribers")
         self.window.recipients = List((-285, 273, 270, -49), self.recipients)
@@ -95,12 +108,25 @@ class UFODeliveryWindow(BaseWindowController):
                     notes=self.window.notes_field.get(),
                     designer_email_address=self.window.email_address_field.get()
                 )
-                response = Ghostlines('v0.1').send(**params)
+
+                license_path = self.license_storage.retrieve()
+
+                if license_path is not '' and os.path.exists(license_path):
+                    with open(license_path, 'rb') as license:
+                        filename = os.path.basename(license_path)
+                        _, extension = os.path.splitext(license_path)
+                        content_type = filetypes[extension]
+                        params['license'] = (filename, license, content_type)
+                        response = Ghostlines('v0.1').send(**params)
+                else:
+                    response = Ghostlines('v0.1').send(**params)
 
             if response.status_code == requests.codes.created:
                 message("{} was delivered".format(self.font.info.familyName))
             else:
-                message("{} could not be delivered".format(self.font.info.familyName), "Error code: {}".format(response.status_code))
+                print repr(response)
+                message("{} could not be delivered".format(self.font.info.familyName),
+                        "Error code: {}\n{}".format(response.status_code, response.json()))
         finally:
             progress.close()
 
