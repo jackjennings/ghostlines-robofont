@@ -13,7 +13,7 @@ from ghostlines.font_recipients import FontRecipients
 from ghostlines.background import Background
 from ghostlines.applicant_list import ApplicantList
 from ghostlines.attribution_text import AttributionText
-from ghostlines.notes_editor import NotesEditor
+from ghostlines.fields.notes_editor import NotesEditor
 from ghostlines.fields.email_address_field import EmailAddressField
 from ghostlines.fields.file_upload_field import FileUploadField
 from ghostlines.lib_storage import LibStorage
