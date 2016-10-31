@@ -3,7 +3,16 @@
 <plist version="1.0">
 <dict>
 	<key>addToMenu</key>
-	<array/>
+	<array>
+		<dict>
+			<key>path</key>
+			<string>nsworkspace_test.py</string>
+			<key>preferredName</key>
+			<string>Nsworkspacetest</string>
+			<key>shortKey</key>
+			<string></string>
+		</dict>
+	</array>
 	<key>com.robofontmechanic.Mechanic</key>
 	<dict>
 		<key>repository</key>
@@ -24,7 +33,7 @@
 	<key>name</key>
 	<string>Ghostlines (Beta)</string>
 	<key>timeStamp</key>
-	<real>1476319914.718644</real>
+	<real>1477936321.192918</real>
 	<key>version</key>
 	<string>0.2.1</string>
 </dict>
