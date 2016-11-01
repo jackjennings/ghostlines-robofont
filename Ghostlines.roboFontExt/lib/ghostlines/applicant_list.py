@@ -3,7 +3,7 @@ import webbrowser
 from ghostlines.api import Ghostlines
 from ghostlines.dashed_rectangle import DashedRectangle
 
-from vanilla import Group, Button, List
+from vanilla import Group, Button, List, TextBox
 
 
 def CenteredButton(boxWidth, boxHeight, width, height, *args, **kwargs):
@@ -28,7 +28,9 @@ class ApplicantList(Group):
         self.activate_registry_button = CenteredButton(width, height, 190, 24,
                                                        "Activate Registration Page",
                                                        callback=self.activate)
-        self.list = List((0, 0, 0, -34), applicants)
+
+        self.label = TextBox((0, 0, -0, 22), "Applicants")
+        self.list = List((0, 23, 0, -34), applicants)
         self.approve_applicant_button = Button((0, -24, 90, 24),
                                                "Approve",
                                                callback=self.approve_applicant)
@@ -80,6 +82,7 @@ class ApplicantList(Group):
     def activated(self, value):
         self._activated = value
 
+        self.label.show(value)
         self.list.show(value)
         self.approve_applicant_button.show(value)
         self.border.show(not value)

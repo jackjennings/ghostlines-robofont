@@ -1,13 +1,6 @@
 from vanilla import TextEditor
 
-
-class NullStorage(object):
-
-    def store(self, *args):
-        print args
-
-    def retrieve(self):
-        return ''
+from ghostlines.storage.null_storage import NullStorage
 
 
 class NotesEditor(TextEditor):
