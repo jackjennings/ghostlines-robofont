@@ -16,6 +16,7 @@ from ghostlines.attribution_text import AttributionText
 from ghostlines.fields.notes_editor import NotesEditor
 from ghostlines.fields.email_address_field import EmailAddressField
 from ghostlines.fields.file_upload_field import FileUploadField
+from ghostlines.ui.counter_button import CounterButton
 from ghostlines.lib_storage import LibStorage
 from ghostlines.text import WhiteText
 
@@ -41,7 +42,9 @@ class UFODeliveryWindow(BaseWindowController):
 
         self.window.background = Background((0, 0, -0, 235))
         self.window.attribution = AttributionText((15, 15, -15, 22), font)
-        self.window.send_button = Button((-135, 12, 120, 24), "Send Release", callback=self.send)
+        self.window.send_button = CounterButton((-215, 12, 200, 24),
+                                                "Send Release",
+                                                callback=self.send)
 
         self.window.notes_field_label = TextBox((15, 52, -15, 22), WhiteText("Release Notes"))
         self.window.notes_field = NotesEditor((15, 75, -15, 80),
@@ -49,14 +52,18 @@ class UFODeliveryWindow(BaseWindowController):
 
         self.window.email_address_field_label = TextBox((15, 170, 270, 22), WhiteText("Contact Email Included in Release"))
         self.window.email_address_field = EmailAddressField((15, 193, 270, 22),
-                                             storage=self.email_storage)
+                                                            storage=self.email_storage)
 
         self.window.license_field_label = TextBox((-285, 170, -15, 22), WhiteText("License"))
         self.window.license_field = FileUploadField((-285, 193, -15, 22),
                                                     storage=self.license_storage)
 
         self.window.recipients_label = TextBox((-285, 250, -15, 22), "Subscribers")
-        self.window.recipients = List((-285, 273, 270, -49), self.recipients)
+        self.window.recipients = List((-285, 273, 270, -49),
+                                      self.recipients,
+                                      selectionCallback=self.update_send_button)
+        self.window.recipients.setSelection([])
+
         self.window.add_recipient_button = Button((-285, -39, 30, 24), "+", callback=self.add_recipient)
         self.window.remove_recipient_button = Button((-246, -39, 30, 24), "-", callback=self.remove_recipient)
 
@@ -85,7 +92,13 @@ class UFODeliveryWindow(BaseWindowController):
         self.window.open()
 
     def send(self, sender):
-        recipients = ', '.join(self.window.recipients.get())
+        recipients = self.window.recipients.get()
+        selection = [recipients[i] for i in self.window.recipients.getSelection()]
+
+        if selection == []:
+            selection = self.window.recipients.get()
+
+        recipients = ', '.join(selection)
 
         progress = ProgressWindow('', tickCount=3, parentWindow=self.window)
 
@@ -158,6 +171,9 @@ class UFODeliveryWindow(BaseWindowController):
             self.recipients.append(email)
             self.window.recipients.set(self.recipients)
             self.close_sheet()
+
+    def update_send_button(self, sender):
+        self.window.send_button.amount = len(self.window.recipients.getSelection())
 
     @property
     def title(self):
