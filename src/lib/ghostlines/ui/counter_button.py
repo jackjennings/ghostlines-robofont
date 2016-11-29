@@ -1,10 +1,10 @@
 from vanilla import Button
 
-
 class CounterButton(Button):
 
     def __init__(self, dimensions, label, **kwargs):
-        self.label = label
+        self.label = label[0]
+        self.count_label = label[1]
         super(CounterButton, self).__init__(dimensions, label, **kwargs)
 
     @property
@@ -18,6 +18,6 @@ class CounterButton(Button):
         if self._amount is 0:
             self.setTitle(self.label)
         else:
-            self.setTitle("{} (to {})".format(self.label, self._amount))
+            self.setTitle(self.count_label.format(self._amount))
 
         return self.amount
