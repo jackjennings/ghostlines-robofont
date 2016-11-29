@@ -43,7 +43,7 @@ class UFODeliveryWindow(BaseWindowController):
         self.window.background = Background((0, 0, -0, 235))
         self.window.attribution = AttributionText((15, 15, -15, 22), font)
         self.window.send_button = CounterButton((-215, 12, 200, 24),
-                                                "Send Release",
+                                                ("Send Release to All", "Send Release to {}"),
                                                 callback=self.send)
 
         self.window.notes_field_label = TextBox((15, 52, -15, 22), WhiteText("Release Notes"))
