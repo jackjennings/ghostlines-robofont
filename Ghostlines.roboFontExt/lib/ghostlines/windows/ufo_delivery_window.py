@@ -64,6 +64,11 @@ class UFODeliveryWindow(BaseWindowController):
                                       selectionCallback=self.update_send_button)
         self.window.recipients.setSelection([])
 
+        self.window.recipients_tip = TextBox((-200, -33, 185, 14),
+                                             "cmd+click to select subset",
+                                             alignment="right",
+                                             sizeStyle="small")
+
         self.window.add_recipient_button = Button((-285, -39, 30, 24), "+", callback=self.add_recipient)
         self.window.remove_recipient_button = Button((-246, -39, 30, 24), "-", callback=self.remove_recipient)
 
