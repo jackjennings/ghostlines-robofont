@@ -2,7 +2,7 @@
 name: Ghostlines (Beta)
 version: 0.3.1
 developer: Ghostlines
-developerURL: http://ghostlines.pm
+developerURL: https://ghostlines.pm
 com.robofontmechanic.Mechanic:
   repository: ghostlines/ghostlines-robofont
   summary: Integrated project management for type design
