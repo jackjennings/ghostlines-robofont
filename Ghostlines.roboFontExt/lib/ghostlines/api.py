@@ -43,4 +43,4 @@ class Ghostlines(object):
         return requests.post(url, data=data)
 
     def path(self, endpoint):
-        return '{}/api/{}/{}'.format(env.api_url, self.version, endpoint)
+        return '{}/{}/{}'.format(env.api_url, self.version, endpoint)

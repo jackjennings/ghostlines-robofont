@@ -14,7 +14,7 @@
 	<key>developer</key>
 	<string>Ghostlines</string>
 	<key>developerURL</key>
-	<string>http://ghostlines.pm</string>
+	<string>https://ghostlines.pm</string>
 	<key>html</key>
 	<true/>
 	<key>launchAtStartUp</key>
@@ -24,7 +24,7 @@
 	<key>name</key>
 	<string>Ghostlines (Beta)</string>
 	<key>timeStamp</key>
-	<real>1479444725.140845</real>
+	<real>1484337621.889214</real>
 	<key>version</key>
 	<string>0.3.1</string>
 </dict>
