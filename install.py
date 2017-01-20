@@ -21,7 +21,7 @@ def unzip(zipFilePath, destDir):
             fd.write(zipped_dir.read(name))
             fd.close()
     zipped_dir.close()
-    
+
 def download(url, destDir):
     zip_path = temp + destDir + '.zip'
     response = urlopen(url)
@@ -32,30 +32,30 @@ def download(url, destDir):
             if not chunk:
                 break
             f.write(chunk)
-            
+
     unzip(zip_path, temp) # Unzip it into temp
-    
+
 def install_extension(url, destDir, extName):
     """Download extension, unzip it, and install in RoboFont."""
-    
+
     download(url,destDir)
     extension_path = temp + destDir + '/' + extName
     extension = ExtensionBundle(extension_path)
     extension.install()
-    
+
 ########## End of functions, now the scripting ##########
 
 install_extension('https://github.com/jackjennings/Mechanic/archive/master.zip', 'Mechanic-master', 'Mechanic.roboFontExt')
-install_extension('https://github.com/ghostlines/ghostlines-robofont/archive/master.zip', 'ghostlines-robofont-master', 'Ghostlines.roboFontExt')
+install_extension('https://github.com/ghostlines/ghostlines-robofont/archive/v1.zip', 'ghostlines-robofont-master', 'Ghostlines.roboFontExt')
 
 try:
     import mechanic
-except: 
+except:
     dialogs.message("Error installing Mechanic.")
-    
+
 try:
     import ghostlines
-except: 
+except:
     dialogs.message("Error installing Ghostlines.")
 
 # HYPOTHETICAL CODE ...
