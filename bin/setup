@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+set -vx
+
+pipenv install --dev
+pipenv run pip install -e .
+pipenv run pytest
+
+# Do any other automated setup that you need to do here
