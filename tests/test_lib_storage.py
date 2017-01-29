@@ -1,4 +1,4 @@
-from ghostlines.lib_storage import LibStorage
+from ghostlines.storage.lib_storage import LibStorage
 
 
 class TestLibStorage(object):
