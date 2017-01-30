@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.4.0
+-----
+
+* Change extension to use api.ghostlines.pm subdomain for accessing API
+* Use HTTPS for all API access
+* Add a Code of Conduct
+
 0.3.1
 -----
 

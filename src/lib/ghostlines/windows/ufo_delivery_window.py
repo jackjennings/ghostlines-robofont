@@ -17,7 +17,7 @@ from ghostlines.fields.notes_editor import NotesEditor
 from ghostlines.fields.email_address_field import EmailAddressField
 from ghostlines.fields.file_upload_field import FileUploadField
 from ghostlines.ui.counter_button import CounterButton
-from ghostlines.lib_storage import LibStorage
+from ghostlines.storage.lib_storage import LibStorage
 from ghostlines.text import WhiteText
 
 full_requirements_message = "Both a family name and a designer need to be set in order to provide enough information in the email to your testers."
