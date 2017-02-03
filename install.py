@@ -58,6 +58,6 @@ try:
 except:
     dialogs.message("Error installing Ghostlines.")
 
-from ghostlines.windows.account import AccountWindow
+from ghostlines.windows.account_window import AccountWindow
 
 AccountWindow().open()
