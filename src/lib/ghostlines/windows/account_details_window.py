@@ -1,7 +1,6 @@
 import requests
 
 from vanilla import Window, Button, TextBox
-from vanilla.dialogs import message
 from defconAppKit.windows.baseWindow import BaseWindowController
 
 from ghostlines.lazy_property import lazy_property

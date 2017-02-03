@@ -1,4 +1,3 @@
-from ghostlines.lazy_property import lazy_property
 from ghostlines.storage.app_storage import AppStorage
 from ghostlines.windows.account_details_window import AccountDetailsWindow
 from ghostlines.windows.sign_in_window import SignInWindow
