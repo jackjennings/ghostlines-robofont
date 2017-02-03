@@ -17,7 +17,6 @@ class AccountDetailsWindow(BaseWindowController):
         self.window.email_label = TextBox((15, 15, -15, 22), "Account Email:")
         self.window.account_email = TextBox((15, 40, -15, 22), self.account['email_address'], alignment='center')
         self.window.sign_out_button = Button((15, 80, -15, 22), "Sign Out", callback=self.sign_out)
-        self.account
 
     def open(self):
         self.window.open()
