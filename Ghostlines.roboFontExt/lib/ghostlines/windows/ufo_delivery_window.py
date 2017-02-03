@@ -30,6 +30,7 @@ filetypes = {
     '.txt': 'text/plain'
 }
 
+
 class UFODeliveryWindow(BaseWindowController):
 
     def __init__(self, font):

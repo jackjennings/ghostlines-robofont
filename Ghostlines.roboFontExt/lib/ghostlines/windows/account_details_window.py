@@ -7,6 +7,7 @@ from defconAppKit.windows.baseWindow import BaseWindowController
 from ghostlines.lazy_property import lazy_property
 from ghostlines.storage.app_storage import AppStorage
 
+
 class AccountDetailsWindow(BaseWindowController):
 
     def __init__(self, logout_window, account=None):

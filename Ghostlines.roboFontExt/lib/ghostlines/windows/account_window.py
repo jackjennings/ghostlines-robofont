@@ -3,6 +3,7 @@ from ghostlines.storage.app_storage import AppStorage
 from ghostlines.windows.account_details_window import AccountDetailsWindow
 from ghostlines.windows.sign_in_window import SignInWindow
 
+
 class AccountWindow(object):
     def __init__(self, sign_in=SignInWindow, account_details=AccountDetailsWindow):
         if self.is_logged_in:

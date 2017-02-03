@@ -8,6 +8,7 @@ from defconAppKit.windows.baseWindow import BaseWindowController
 from ghostlines.lazy_property import lazy_property
 from ghostlines.storage.app_storage import AppStorage
 
+
 class SignInWindow(BaseWindowController):
 
     def __init__(self, success_window):
