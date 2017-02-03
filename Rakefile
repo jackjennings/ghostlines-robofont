@@ -1,5 +1,5 @@
-require './rake/robofont/extension/build_task'
+require 'rake/robofont'
 
-Rake::RoboFont::Extension::BuildTask.new "Ghostlines"
+Rake::RoboFont::Extension::BuildTask.new :build, "src" => "Ghostlines"
 
 task default: :build
