@@ -3,7 +3,16 @@
 <plist version="1.0">
 <dict>
 	<key>addToMenu</key>
-	<array/>
+	<array>
+		<dict>
+			<key>path</key>
+			<string>account.py</string>
+			<key>preferredName</key>
+			<string>Account</string>
+			<key>shortKey</key>
+			<string></string>
+		</dict>
+	</array>
 	<key>com.robofontmechanic.Mechanic</key>
 	<dict>
 		<key>repository</key>
@@ -24,7 +33,7 @@
 	<key>name</key>
 	<string>Ghostlines (Beta)</string>
 	<key>timeStamp</key>
-	<real>1484338724.011035</real>
+	<real>1486160256.5300422</real>
 	<key>version</key>
 	<string>0.4.0</string>
 </dict>
