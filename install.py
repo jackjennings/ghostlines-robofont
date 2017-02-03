@@ -58,6 +58,6 @@ try:
 except:
     dialogs.message("Error installing Ghostlines.")
 
-# HYPOTHETICAL CODE ...
-from ghostlines.windows.account import accountWindow
-accountWindow.open() # No argument can represent "no current account" (i.e. "logged-out")
+from ghostlines.windows.account_window import AccountWindow
+
+AccountWindow().open()
