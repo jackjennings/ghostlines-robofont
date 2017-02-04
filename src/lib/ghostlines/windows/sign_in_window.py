@@ -14,10 +14,10 @@ class SignInWindow(BaseWindowController):
     def __init__(self, success_window):
         self.success_window = success_window
         self.window.introduction = TextBox((15, 15, -15, 22), 'Sign in with your Ghostlines account.', sizeStyle='small')
-        self.window.email_label = TextBox((15, 47, -15, 22), 'Email:', sizeStyle='small')
-        self.window.email_field = EditText((15, 65, -15, 22))
-        self.window.password_label = TextBox((15, 105, -15, 22), 'Password:', sizeStyle='small')
-        self.window.password_field = EditText((15, 123, -15, 22))
+        self.window.email_label = TextBox((15, 44, -15, 22), 'Email:', sizeStyle='small')
+        self.window.email_field = EditText((15, 61, -15, 22))
+        self.window.password_label = TextBox((15, 101, -15, 22), 'Password:', sizeStyle='small')
+        self.window.password_field = EditText((15, 119, -15, 22))
         self.window.need_account_button = Button((15, -38, 110, 22), 'Need Account?', callback=self.make_account)
         self.window.sign_in_button = Button((175, -38, 110, 22), 'Sign In', callback=self.sign_in)
         self.window.setDefaultButton(self.window.sign_in_button)
@@ -48,6 +48,6 @@ class SignInWindow(BaseWindowController):
 
     @lazy_property
     def window(self):
-        return Window((300, 200),
+        return Window((300, 196),
                       autosaveName=self.__class__.__name__,
                       title="Ghostlines: Sign In")
