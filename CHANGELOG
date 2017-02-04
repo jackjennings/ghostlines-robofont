@@ -1,6 +1,8 @@
 Changelog
 =========
 
+* Fix error message not appearing when Family Name was not set
+
 0.4.0
 -----
 
