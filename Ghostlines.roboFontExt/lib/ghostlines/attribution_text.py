@@ -6,7 +6,7 @@ from AppKit import NSFontAttributeName, NSFont, NSForegroundColorAttributeName, 
 class AttributionText(TextBox):
 
     def __init__(self, dimensions, font):
-        font_name = font.info.familyName
+        font_name = font.info.familyName or ""
         attribution = "{} by {}".format(font_name, font.info.designer)
         attribution_attributes = {
             NSFontAttributeName: NSFont.systemFontOfSize_(NSFont.systemFontSize()),
