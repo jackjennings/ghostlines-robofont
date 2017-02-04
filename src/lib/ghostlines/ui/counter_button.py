@@ -1,11 +1,12 @@
 from vanilla import Button
 
+
 class CounterButton(Button):
 
     def __init__(self, dimensions, label, **kwargs):
         self.label = label[0]
         self.count_label = label[1]
-        super(CounterButton, self).__init__(dimensions, label, **kwargs)
+        super(CounterButton, self).__init__(dimensions, self.label, **kwargs)
 
     @property
     def amount(self):
