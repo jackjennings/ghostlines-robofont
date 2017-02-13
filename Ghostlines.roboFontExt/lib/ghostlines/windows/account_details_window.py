@@ -3,6 +3,7 @@ import requests
 from vanilla import Window, Button, TextBox
 from defconAppKit.windows.baseWindow import BaseWindowController
 
+from ghostlines import env
 from ghostlines.lazy_property import lazy_property
 from ghostlines.storage.app_storage import AppStorage
 
@@ -28,7 +29,7 @@ class AccountDetailsWindow(BaseWindowController):
     @lazy_property
     def account(self):
         token = AppStorage('pm.ghostlines.ghostlines.access_token').retrieve()
-        request = requests.get('https://ghostlines-staging.herokuapp.com/v1/account', headers={'Authorization': 'Bearer {}'.format(token)})
+        request = requests.get('{}/v1/account'.format(env.api_url), headers={'Authorization': 'Bearer {}'.format(token)})
         return request.json()
 
     @lazy_property

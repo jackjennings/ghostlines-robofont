@@ -18,6 +18,3 @@ class AccountWindow(object):
 
     def open(self):
         self.window.open()
-
-
-AccountWindow().open()

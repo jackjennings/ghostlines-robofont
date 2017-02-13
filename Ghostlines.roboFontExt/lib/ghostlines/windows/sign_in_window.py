@@ -5,6 +5,7 @@ from vanilla import Window, Button, EditText, TextBox
 from vanilla.dialogs import message
 from defconAppKit.windows.baseWindow import BaseWindowController
 
+from ghostlines import env
 from ghostlines.lazy_property import lazy_property
 from ghostlines.storage.app_storage import AppStorage
 
@@ -27,7 +28,8 @@ class SignInWindow(BaseWindowController):
     def sign_in(self, _):
         email_address = self.window.email_field.get()
         password = self.window.password_field.get()
-        response = requests.post('https://ghostlines-staging.herokuapp.com/v1/authenticate', data={'email_address': email_address, 'password': password})
+        data = {'email_address': email_address, 'password': password}
+        response = requests.post('{}/v1/authenticate'.format(env.api_url), data=data)
         json = response.json()
         if response.status_code == 201: # Success!
             account = json['account']

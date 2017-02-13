@@ -33,11 +33,7 @@
 	<key>name</key>
 	<string>Ghostlines (Beta)</string>
 	<key>timeStamp</key>
-<<<<<<< HEAD
-	<real>1486164281.706343</real>
-=======
-	<real>1486175923.778002</real>
->>>>>>> dev
+	<real>1487018206.161998</real>
 	<key>version</key>
 	<string>0.4.1</string>
 </dict>
