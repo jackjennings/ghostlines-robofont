@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/ghostlines/rake-robofont.git
-  revision: 3a0971304906d44eebd09784e169f002b9e685e8
+  revision: f9da41c26a46ff1be38a8000d223c5a71c813742
   specs:
     rake-robofont (0.1.0)
       activesupport (~> 4.2)
@@ -30,7 +30,7 @@ GEM
     guard-rake (1.0.0)
       guard
       rake
-    i18n (0.7.0)
+    i18n (0.8.0)
     json (1.8.6)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -70,4 +70,4 @@ DEPENDENCIES
   rake-robofont!
 
 BUNDLED WITH
-   1.13.7
+   1.14.3
