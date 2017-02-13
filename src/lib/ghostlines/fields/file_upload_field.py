@@ -4,7 +4,6 @@ from AppKit import NSWorkspace, NSLineBreakByTruncatingTail
 from vanilla import Group, Button, TextBox, ImageView, ImageButton
 from vanilla.dialogs import getFile, message
 
-from ghostlines.text import WhiteText
 from ghostlines.storage.null_storage import NullStorage
 
 
@@ -64,7 +63,7 @@ class FileUploadField(Group):
         self.choose_file_button.show(not selected)
         self.remove_file_button.show(selected)
         self.filepath_label.show(selected)
-        self.filepath_label.set(WhiteText(self.filename))
+        self.filepath_label.set(self.filename)
         self.filepath_button.show(selected)
         self.filetype_image.show(selected)
         self.filetype_image.setImage(imageObject=icon)

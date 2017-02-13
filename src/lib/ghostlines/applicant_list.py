@@ -26,7 +26,7 @@ class ApplicantList(Group):
 
         self.border = DashedRectangle((0, 0, width, height))
         self.activate_registry_button = CenteredButton(width, height, 190, 24,
-                                                       "Activate Registration Page",
+                                                       "Create Application Form",
                                                        callback=self.activate)
 
         self.label = TextBox((0, 0, -0, 22), "Applicants")
@@ -35,7 +35,7 @@ class ApplicantList(Group):
                                                "Approve",
                                                callback=self.approve_applicant)
         self.open_registration_page_button = Button((-150, -20, 150, 17),
-                                                    "Open Registration Page",
+                                                    "Open Application Form",
                                                     callback=self.open_registration_page,
                                                     sizeStyle="small")
 

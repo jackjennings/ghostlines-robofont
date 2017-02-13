@@ -10,6 +10,7 @@ from mojo.roboFont import CurrentFont
 from lib.UI.toolbarGlyphTools import ToolbarGlyphTools
 
 from ghostlines.windows.ufo_delivery_window import UFODeliveryWindow
+from ghostlines.windows.release_window import ReleaseWindow
 
 class GhostlinesToolbar(object):
 
@@ -52,4 +53,5 @@ class GhostlinesToolbar(object):
         vanillaWindow._window.toolbar().setDisplayMode_(displayMode)
 
     def openSender(self, sender):
-        UFODeliveryWindow(CurrentFont()).open()
+        ReleaseWindow(CurrentFont()).open()
+        # UFODeliveryWindow(CurrentFont()).open()
