@@ -1,31 +1,34 @@
 # This script downloads Mechanic and Ghostlines as .zip files into tmp, and then installs them into RoboFont.
 
+import os
 from urllib2 import urlopen
 import zipfile as zf
-from mojo.extensions import *
 from vanilla import dialogs
-import os
+
+from mojo.extensions import *
 
 temp = '/tmp/'
 
-def unzip(zipFilePath, destDir):
-    zipped_dir = zf.ZipFile(zipFilePath)
+def unzip(zip_file_path, dest_dir):
+    zipped_dir = zf.ZipFile(zip_file_path)
     for name in zipped_dir.namelist():
-        (dirName, fileName) = os.path.split(name)
-        if fileName == '':
+        (dir_name, file_name) = os.path.split(name)
+        
+        if file_name == '':
             # so this file is a directory
-            newDir = destDir + '/' + dirName
-            if not os.path.exists(newDir):
-                os.mkdir(newDir)
+            new_dir = dest_dir + '/' + dir_name
+            if not os.path.exists(new_dir):
+                os.mkdir(new_dir)
         else:
             # so this is a file with an extension
-            fd = open(destDir + '/' + name, 'wb')
+            fd = open(dest_dir + '/' + name, 'wb')
             fd.write(zipped_dir.read(name))
             fd.close()
+
     zipped_dir.close()
 
-def download(url, destDir):
-    zip_path = temp + destDir + '.zip'
+def download(url, dest_dir):
+    zip_path = temp + dest_dir + '.zip'
     response = urlopen(url)
     CHUNK = 16 * 1024
     with open(zip_path, 'wb') as f:
@@ -37,11 +40,11 @@ def download(url, destDir):
 
     unzip(zip_path, temp) # Unzip it into temp
 
-def install_extension(url, destDir, extName):
+def install_extension(url, dest_dir, ext_name):
     """Download extension, unzip it, and install in RoboFont."""
 
-    download(url,destDir)
-    extension_path = temp + destDir + '/' + extName
+    download(url, dest_dir)
+    extension_path = temp + dest_dir + '/' + ext_name
     extension = ExtensionBundle(extension_path)
     extension.install()
 
@@ -61,4 +64,4 @@ except:
     dialogs.message("Error installing Ghostlines.")
 
 from ghostlines.windows.account_window import AccountWindow
-AccountWindow.open()
+AccountWindow().open()
