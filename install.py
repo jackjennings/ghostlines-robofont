@@ -31,6 +31,7 @@ def download(url, dest_dir):
     zip_path = temp + dest_dir + '.zip'
     response = urlopen(url)
     CHUNK = 16 * 1024
+    
     with open(zip_path, 'wb') as f:
         while True:
             chunk = response.read(CHUNK)
@@ -51,7 +52,7 @@ def install_extension(url, dest_dir, ext_name):
 ########## end functions, now the script ##########
 
 install_extension('https://github.com/jackjennings/Mechanic/archive/master.zip', 'Mechanic-master', 'Mechanic.roboFontExt')
-install_extension('https://github.com/ghostlines/ghostlines-robofont/archive/v1.zip', 'ghostlines-robofont-master', 'Ghostlines.roboFontExt')
+install_extension('https://github.com/ghostlines/ghostlines-robofont/archive/v1.zip', 'ghostlines-robofont-1', 'Ghostlines.roboFontExt')
 
 try:
     import mechanic
