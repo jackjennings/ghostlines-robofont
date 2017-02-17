@@ -14,13 +14,14 @@ class SignInWindow(BaseWindowController):
 
     def __init__(self, success_window):
         self.success_window = success_window
-        self.window.introduction = TextBox((15, 15, -15, 44), "Sign in using credentials from ghostlines.pm.")
-        self.window.email_label = TextBox((15, 70, -15, 22), "Account Email:")
-        self.window.email_field = EditText((15, 100, -15, 22))
-        self.window.password_label = TextBox((15, 140, -15, 22), "Account Password:")
-        self.window.password_field = EditText((15, 165, -15, 22))
-        self.window.sign_in_button = Button((15, 205, 125, 22), "Sign In", callback=self.sign_in)
-        self.window.need_account_button = Button((160, 205, 125, 22), "Need Account?", callback=self.make_account)
+        self.window.introduction = TextBox((15, 15, -15, 22), 'Sign in with your Ghostlines account.', sizeStyle='small')
+        self.window.email_label = TextBox((15, 44, -15, 22), 'Email:', sizeStyle='small')
+        self.window.email_field = EditText((15, 61, -15, 22))
+        self.window.password_label = TextBox((15, 101, -15, 22), 'Password:', sizeStyle='small')
+        self.window.password_field = EditText((15, 119, -15, 22))
+        self.window.need_account_button = Button((15, -38, 110, 22), 'Need Account?', callback=self.make_account)
+        self.window.sign_in_button = Button((175, -38, 110, 22), 'Sign In', callback=self.sign_in)
+        self.window.setDefaultButton(self.window.sign_in_button)
 
     def open(self):
         self.window.open()
@@ -49,6 +50,6 @@ class SignInWindow(BaseWindowController):
 
     @lazy_property
     def window(self):
-        return Window((300, 350),
+        return Window((300, 196),
                       autosaveName=self.__class__.__name__,
-                      title="Ghostlines: Account")
+                      title="Ghostlines: Sign In")

@@ -14,9 +14,9 @@ class AccountDetailsWindow(BaseWindowController):
         self.logout_window = logout_window
         if account is not None:
             self.account = account
-        self.window.email_label = TextBox((15, 15, -15, 22), "Account Email:")
+        self.window.email_label = TextBox((15, 15, -15, 22), 'Account Email:', sizeStyle='small')
         self.window.account_email = TextBox((15, 40, -15, 22), self.account['email_address'], alignment='center')
-        self.window.sign_out_button = Button((15, 80, -15, 22), "Sign Out", callback=self.sign_out)
+        self.window.sign_out_button = Button((175, -38, 110, 22), 'Sign Out', callback=self.sign_out)
 
     def open(self):
         self.window.open()
@@ -34,6 +34,6 @@ class AccountDetailsWindow(BaseWindowController):
 
     @lazy_property
     def window(self):
-        return Window((300, 350),
+        return Window((300, 110),
                       autosaveName=self.__class__.__name__,
-                      title="Ghostlines: Account")
+                      title="Ghostlines: Account Details")
