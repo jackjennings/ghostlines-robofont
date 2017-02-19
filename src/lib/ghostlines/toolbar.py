@@ -9,8 +9,10 @@ from mojo.roboFont import CurrentFont
 
 from lib.UI.toolbarGlyphTools import ToolbarGlyphTools
 
+from ghostlines.storage.lib_storage import LibStorage
 from ghostlines.windows.ufo_delivery_window import UFODeliveryWindow
 from ghostlines.windows.release_window import ReleaseWindow
+from ghostlines.windows.create_font_family_window import CreateFontFamilyWindow
 
 class GhostlinesToolbar(object):
 
@@ -22,14 +24,22 @@ class GhostlinesToolbar(object):
 
     def addFontToolbar(self, info):
         window = CurrentFontWindow()
+        font = CurrentFont()
 
         if window is None:
             return
 
+        family_id_storage = LibStorage(font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
+
+        if family_id_storage.retrieve(default=None) is not None:
+            iconName = 'upload.pdf'
+        else:
+            iconName = 'create.pdf'
+
         self.addToolbar(window,
                         'Ghostlines',
                         'ghostlinesUpload',
-                        'upload.pdf',
+                        iconName,
                         self.openSender,
                         index=-2)
 
@@ -53,5 +63,11 @@ class GhostlinesToolbar(object):
         vanillaWindow._window.toolbar().setDisplayMode_(displayMode)
 
     def openSender(self, sender):
-        ReleaseWindow(CurrentFont()).open()
+        font = CurrentFont()
+        family_id_storage = LibStorage(font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
+
+        if family_id_storage.retrieve(default=None) is not None:
+            ReleaseWindow(font).open()
+        else:
+            CreateFontFamilyWindow(font, success_window=ReleaseWindow).open()
         # UFODeliveryWindow(CurrentFont()).open()

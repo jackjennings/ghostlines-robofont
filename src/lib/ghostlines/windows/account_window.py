@@ -4,6 +4,7 @@ from ghostlines.windows.sign_in_window import SignInWindow
 
 
 class AccountWindow(object):
+
     def __init__(self, sign_in=SignInWindow, account_details=AccountDetailsWindow):
         if self.is_logged_in:
             self.window = account_details(logout_window=sign_in)

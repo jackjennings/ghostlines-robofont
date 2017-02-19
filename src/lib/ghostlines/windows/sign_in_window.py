@@ -32,6 +32,7 @@ class SignInWindow(BaseWindowController):
         data = {'email_address': email_address, 'password': password}
         response = requests.post('{}/v1/authenticate'.format(env.api_url), data=data)
         json = response.json()
+
         if response.status_code == 201: # Success!
             account = json['account']
             token = json['token']
