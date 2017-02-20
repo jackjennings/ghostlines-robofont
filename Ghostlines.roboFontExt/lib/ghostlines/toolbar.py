@@ -10,7 +10,7 @@ from mojo.roboFont import CurrentFont
 from lib.UI.toolbarGlyphTools import ToolbarGlyphTools
 
 from ghostlines.storage.lib_storage import LibStorage
-from ghostlines.windows.ufo_delivery_window import UFODeliveryWindow
+from ghostlines.windows.legacy_release_window import LegacyReleaseWindow
 from ghostlines.windows.release_window import ReleaseWindow
 from ghostlines.windows.create_font_family_window import CreateFontFamilyWindow
 
@@ -29,17 +29,10 @@ class GhostlinesToolbar(object):
         if window is None:
             return
 
-        family_id_storage = LibStorage(font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
-
-        if family_id_storage.retrieve(default=None) is not None:
-            iconName = 'upload.pdf'
-        else:
-            iconName = 'create.pdf'
-
         self.addToolbar(window,
                         'Ghostlines',
                         'ghostlinesUpload',
-                        iconName,
+                        self.toolbar_icon_for_action(font),
                         self.openSender,
                         index=-2)
 
@@ -64,10 +57,24 @@ class GhostlinesToolbar(object):
 
     def openSender(self, sender):
         font = CurrentFont()
-        family_id_storage = LibStorage(font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
 
-        if family_id_storage.retrieve(default=None) is not None:
+        if self.has_legacy_data(font):
+            LegacyReleaseWindow(font).open()
+        elif self.has_family(font):
             ReleaseWindow(font).open()
         else:
             CreateFontFamilyWindow(font, success_window=ReleaseWindow).open()
-        # UFODeliveryWindow(CurrentFont()).open()
+
+    def has_legacy_data(self, font):
+        legacy_storage = LibStorage(font.lib, "pm.ghostlines.ghostlines.recipients")
+        return legacy_storage.retrieve(default=None) is not None
+
+    def has_family(self, font):
+        family_id_storage = LibStorage(font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
+        return family_id_storage.retrieve(default=None) is not None
+
+    def toolbar_icon_for_action(self, font):
+        if self.has_legacy_data(font) or self.has_family(font):
+            return 'upload.pdf'
+        else:
+            return 'create.pdf'

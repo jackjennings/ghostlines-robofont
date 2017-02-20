@@ -31,7 +31,7 @@ filetypes = {
 }
 
 
-class UFODeliveryWindow(BaseWindowController):
+class LegacyReleaseWindow(BaseWindowController):
 
     def __init__(self, font):
         self.font = font
