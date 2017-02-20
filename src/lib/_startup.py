@@ -1,3 +1,3 @@
 from ghostlines.toolbar import GhostlinesToolbar
 
-GhostlinesToolbar()
+GhostlinesToolbar("fontDidOpen", "newFontDidOpen")

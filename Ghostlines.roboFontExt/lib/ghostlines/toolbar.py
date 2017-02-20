@@ -18,9 +18,9 @@ class GhostlinesToolbar(object):
 
     base_path = os.path.dirname(__file__)
 
-    def __init__(self):
-        addObserver(self, "add_font_toolbar", "fontDidOpen")
-        addObserver(self, "add_font_toolbar", "newFontDidOpen")
+    def __init__(self, *events):
+        for event in events:
+            addObserver(self, "add_font_toolbar", event)
 
     def add_font_toolbar(self, info):
         window = CurrentFontWindow()
