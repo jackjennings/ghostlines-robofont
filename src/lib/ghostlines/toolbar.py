@@ -53,7 +53,7 @@ class GhostlinesToolbar(object):
         vanilla_window.addToolbar(toolbarIdentifier="toolbar-%s" % identifier,
                                  toolbarItems=toolbar_items,
                                  addStandardItems=False)
-        vanilla_window._window.toolbar().setdisplay_mode_(display_mode)
+        vanilla_window._window.toolbar().setDisplayMode_(display_mode)
 
     def open_sender(self, sender):
         font = CurrentFont()
