@@ -10,8 +10,8 @@ class LibStorage(object):
         else:
             self.lib[self.key] = content
 
-    def retrieve(self):
+    def retrieve(self, default=''):
         if self.lib.has_key(self.key):
             return self.lib[self.key]
         else:
-            return ''
+            return default

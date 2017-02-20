@@ -5,8 +5,9 @@ from ghostlines import env
 
 class Ghostlines(object):
 
-    def __init__(self, version):
+    def __init__(self, version, token=None):
         self.version = version
+        self.token = token
 
     def send(self, otf=None, recipients=None, notes=None, designer_email_address=None, license=None):
         if not otf and not recipients:
@@ -41,6 +42,14 @@ class Ghostlines(object):
         data = {'email_address': email_address}
         url = self.path('applicants/{}/approve'.format(token))
         return requests.post(url, data=data)
+
+    # V1
+
+    def create_font_family(self, name, designer):
+        data = {'name': name, 'designer_name': designer}
+        headers = {'Authorization': 'Bearer {}'.format(self.token)}
+        url = self.path('font_family')
+        return requests.post(url, data=data, headers=headers)
 
     def path(self, endpoint):
         return '{}/{}/{}'.format(env.api_url, self.version, endpoint)
