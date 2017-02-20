@@ -7,6 +7,7 @@ from defconAppKit.windows.baseWindow import BaseWindowController
 
 from ghostlines import env
 from ghostlines.lazy_property import lazy_property
+from ghostlines.error_message import ErrorMessage
 from ghostlines.storage.app_storage import AppStorage
 
 
@@ -40,14 +41,10 @@ class SignInWindow(BaseWindowController):
             self.success_window(self.__class__, account=account).open()
             self.window.close()
         else:
-            self.display_error_message(json['errors'])
+            ErrorMessage('Sign In Error', json['errors']).open()
 
     def make_account(self, _):
         webbrowser.open('https://ghostlines.pm/signup')
-
-    def display_error_message(self, errors):
-        messages = ', '.join([error['message'] for error in errors])
-        message('Sign In Error', informativeText=messages)
 
     @lazy_property
     def window(self):
