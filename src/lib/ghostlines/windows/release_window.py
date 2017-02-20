@@ -19,6 +19,7 @@ from ghostlines.fields.file_upload_field import FileUploadField
 from ghostlines.ui.counter_button import CounterButton
 from ghostlines.storage.lib_storage import LibStorage
 
+
 full_requirements_message = "Both a family name and a designer need to be set in order to provide enough information in the email to your testers."
 
 # TODO: Detect this mapping in a more sustainable way
@@ -66,12 +67,7 @@ class ReleaseWindow(BaseWindowController):
         self.window.release_info.font_author = TextBox((0, 79, -0, 22), (font.info.designer or ""))
         self.window.release_info.version_label = TextBox((0, 120, -0, 22), "Version Number", sizeStyle="small")
 
-        if font.info.versionMajor is not None and font.info.versionMinor is not None:
-            font_version = "{}.{}".format(font.info.versionMajor, font.info.versionMinor)
-        else:
-            font_version = u"\u2014"
-
-        self.window.release_info.version = TextBox((0, 139, -0, 22), font_version)
+        self.window.release_info.version = TextBox((0, 139, -0, 22), self.font_version)
 
         self.window.release_info.notes_field_label = TextBox((0, 176, -0, 22), "Release Notes", sizeStyle="small")
         self.window.release_info.notes_field = NotesEditor((0, 198, -0, 175), draft_storage=self.note_draft_storage)
@@ -186,6 +182,15 @@ class ReleaseWindow(BaseWindowController):
 
     def update_send_button(self, sender):
         self.window.release_info.send_button.amount = len(self.window.subscribers.getSelection())
+
+    @property
+    def font_version(self):
+        major = self.font.info.versionMajor
+        minor = self.font.info.versionMinor
+        if major is not None and minor is not None:
+            return "{}.{}".format(major, minor)
+        else:
+            return u"\u2014"
 
     @property
     def title(self):

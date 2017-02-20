@@ -14,6 +14,7 @@ from ghostlines.windows.legacy_release_window import LegacyReleaseWindow
 from ghostlines.windows.release_window import ReleaseWindow
 from ghostlines.windows.create_font_family_window import CreateFontFamilyWindow
 
+
 class GhostlinesToolbar(object):
 
     base_path = os.path.dirname(__file__)
