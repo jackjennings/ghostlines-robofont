@@ -39,7 +39,7 @@ class ReleaseWindow(BaseWindowController):
         self.note_draft_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.release_notes_draft')
         self.email_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.designer_email_address')
         self.license_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.license_filepath')
-        
+
         self.window.subscribers_label = TextBox((15, 15, 270, 22), "Subscribers", sizeStyle="small")
         self.window.subscribers = List((15, 37, 270, 205),
                                       self.subscribers,
@@ -55,7 +55,7 @@ class ReleaseWindow(BaseWindowController):
         self.window.remove_recipient_button = Button((55, 248, 30, 24), "-", callback=self.remove_recipient)
 
         self.window.applicants = ApplicantList((15, 295, 270, 200), self.font, self.applicants, self.subscribers, after_approve=self.add_approved_applicant)
-        
+
         self.window.vertical_line = VerticalLine((300, 0, 1, -0))
 
         self.window.release_info = Group((315, 15, -15, -15))
@@ -65,12 +65,12 @@ class ReleaseWindow(BaseWindowController):
         self.window.release_info.font_author_label = TextBox((0, 60, -0, 22), "Designer", sizeStyle="small")
         self.window.release_info.font_author = TextBox((0, 79, -0, 22), (font.info.designer or ""))
         self.window.release_info.version_label = TextBox((0, 120, -0, 22), "Version Number", sizeStyle="small")
-        
+
         if font.info.versionMajor is not None and font.info.versionMinor is not None:
             font_version = "{}.{}".format(font.info.versionMajor, font.info.versionMinor)
         else:
             font_version = u"\u2014"
-        
+
         self.window.release_info.version = TextBox((0, 139, -0, 22), font_version)
 
         self.window.release_info.notes_field_label = TextBox((0, 176, -0, 22), "Release Notes", sizeStyle="small")
@@ -185,8 +185,7 @@ class ReleaseWindow(BaseWindowController):
             self.close_sheet()
 
     def update_send_button(self, sender):
-        pass
-        # self.window.send_button.amount = len(self.window.subscribers.getSelection())
+        self.window.release_info.send_button.amount = len(self.window.subscribers.getSelection())
 
     @property
     def title(self):
