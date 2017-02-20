@@ -19,29 +19,29 @@ class GhostlinesToolbar(object):
     base_path = os.path.dirname(__file__)
 
     def __init__(self):
-        addObserver(self, "addFontToolbar", "fontDidOpen")
-        addObserver(self, "addFontToolbar", "newFontDidOpen")
+        addObserver(self, "add_font_toolbar", "fontDidOpen")
+        addObserver(self, "add_font_toolbar", "newFontDidOpen")
 
-    def addFontToolbar(self, info):
+    def add_font_toolbar(self, info):
         window = CurrentFontWindow()
         font = CurrentFont()
 
         if window is None:
             return
 
-        self.addToolbar(window,
-                        'Ghostlines',
-                        'ghostlinesUpload',
-                        self.toolbar_icon_for_action(font),
-                        self.openSender,
-                        index=-2)
+        self.add_toolbar(window,
+                         'Ghostlines',
+                         'ghostlinesUpload',
+                         self.toolbar_icon_for_action(font),
+                         self.open_sender,
+                         index=-2)
 
-    def addToolbar(self, window, label, identifier, filename, callback, index=-1):
-        toolbarItems = window.getToolbarItems()
-        vanillaWindow = window.window()
-        displayMode = vanillaWindow._window.toolbar().displayMode()
-        imagePath = os.path.join(self.base_path, '..', 'ghostlines', 'resources', filename)
-        image = NSImage.alloc().initByReferencingFile_(imagePath)
+    def add_toolbar(self, window, label, identifier, filename, callback, index=-1):
+        toolbar_items = window.getToolbarItems()
+        vanilla_window = window.window()
+        display_mode = vanilla_window._window.toolbar().displayMode()
+        image_path = os.path.join(self.base_path, '..', 'ghostlines', 'resources', filename)
+        image = NSImage.alloc().initByReferencingFile_(image_path)
 
         newItem = dict(itemIdentifier = identifier,
             label = label,
@@ -49,13 +49,13 @@ class GhostlinesToolbar(object):
             callback = callback
         )
 
-        toolbarItems.insert(index, newItem)
-        vanillaWindow.addToolbar(toolbarIdentifier="toolbar-%s" % identifier,
-                                 toolbarItems=toolbarItems,
+        toolbar_items.insert(index, newItem)
+        vanilla_window.addToolbar(toolbarIdentifier="toolbar-%s" % identifier,
+                                 toolbarItems=toolbar_items,
                                  addStandardItems=False)
-        vanillaWindow._window.toolbar().setDisplayMode_(displayMode)
+        vanilla_window._window.toolbar().setdisplay_mode_(display_mode)
 
-    def openSender(self, sender):
+    def open_sender(self, sender):
         font = CurrentFont()
 
         if self.has_legacy_data(font):
