@@ -237,6 +237,3 @@ class ReleaseWindow(BaseWindowController):
         family_id_storage = LibStorage(self.font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
         token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
         return Ghostlines("v1", token=token).font_family(family_id_storage.retrieve()).json()
-
-if __name__ == "__main__":
-    ReleaseWindow(CurrentFont()).open()
