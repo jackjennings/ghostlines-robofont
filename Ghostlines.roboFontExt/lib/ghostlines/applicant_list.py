@@ -43,7 +43,6 @@ class ApplicantList(Group):
                                                      callback=self.enable)
 
         self.label = TextBox((0, 0, -0, 22), "Applicants", sizeStyle="small")
-        # TODO: Add applicants
         self.list = List((0, 23, 0, -34), [], columnDescriptions=self.columns)
         self.approve_applicant_button = Button((0, -24, 90, 24),
                                                "Approve",
