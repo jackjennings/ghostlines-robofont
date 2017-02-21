@@ -51,5 +51,10 @@ class Ghostlines(object):
         url = self.path('font_family')
         return requests.post(url, data=data, headers=headers)
 
+    def font_family(self, id):
+        url = self.path('font_family/{}'.format(id))
+        headers = {'Authorization': 'Bearer {}'.format(self.token)}
+        return requests.get(url, headers=headers)
+
     def path(self, endpoint):
         return '{}/{}/{}'.format(env.api_url, self.version, endpoint)

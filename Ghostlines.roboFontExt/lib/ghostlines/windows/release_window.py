@@ -18,6 +18,7 @@ from ghostlines.fields.email_address_field import EmailAddressField
 from ghostlines.fields.file_upload_field import FileUploadField
 from ghostlines.ui.counter_button import CounterButton
 from ghostlines.storage.lib_storage import LibStorage
+from ghostlines.storage.app_storage import AppStorage
 
 
 full_requirements_message = "Both a family name and a designer need to be set in order to provide enough information in the email to your testers."
@@ -35,6 +36,7 @@ class ReleaseWindow(BaseWindowController):
 
     def __init__(self, font):
         self.font = font
+
         self.subscribers = FontRecipients(self.font)
         self.applicants = []
         self.note_draft_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.release_notes_draft')
@@ -62,9 +64,9 @@ class ReleaseWindow(BaseWindowController):
         self.window.release_info = Group((315, 15, -15, -15))
 
         self.window.release_info.font_name_label = TextBox((0, 0, -0, 22), "Font Name", sizeStyle="small")
-        self.window.release_info.font_name = TextBox((0, 19, -0, 22), (font.info.familyName or ""))
+        self.window.release_info.font_name = TextBox((0, 19, -0, 22), self.font_family["name"])
         self.window.release_info.font_author_label = TextBox((0, 60, -0, 22), "Designer", sizeStyle="small")
-        self.window.release_info.font_author = TextBox((0, 79, -0, 22), (font.info.designer or ""))
+        self.window.release_info.font_author = TextBox((0, 79, -0, 22), self.font_family["designer_name"])
         self.window.release_info.version_label = TextBox((0, 120, -0, 22), "Version Number", sizeStyle="small")
 
         self.window.release_info.version = TextBox((0, 139, -0, 22), self.font_version)
@@ -201,6 +203,12 @@ class ReleaseWindow(BaseWindowController):
         return Window((600, 510),
                       autosaveName=self.__class__.__name__,
                       title=self.title)
+
+    @lazy_property
+    def font_family(self):
+        family_id_storage = LibStorage(self.font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
+        token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
+        return Ghostlines("v1", token=token).font_family(family_id_storage.retrieve()).json()
 
 if __name__ == "__main__":
     ReleaseWindow(CurrentFont()).open()
