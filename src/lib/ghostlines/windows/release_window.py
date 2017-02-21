@@ -90,8 +90,8 @@ class ReleaseWindow(BaseWindowController):
                                              alignment="right",
                                              sizeStyle="small")
 
-        self.window.add_subscriber_button = Button((15, 248, 30, 24), "+", callback=self.add_subscriber)
-        self.window.remove_recipient_button = Button((55, 248, 30, 24), "-", callback=self.remove_recipient)
+        self.window.show_subscriber_sheet_button = Button((15, 248, 30, 24), "+", callback=self.show_subscriber_sheet)
+        self.window.remove_subscriber_button = Button((55, 248, 30, 24), "-", callback=self.remove_subscriber)
 
         self.window.applicants = ApplicantList((15, 295, 270, 200), self.font, self.applicants, self.subscribers, after_approve=self.add_approved_applicant)
 
@@ -167,13 +167,7 @@ class ReleaseWindow(BaseWindowController):
         finally:
             progress.close()
 
-    def remove_recipient(self, sender):
-        for index in self.window.subscribers.getSelection():
-            del self.subscribers[index]
-
-        self.window.subscribers.set(self.subscribers)
-
-    def add_subscriber(self, sender):
+    def show_subscriber_sheet(self, sender):
         self.window.sheet = Sheet((250, 107), self.window)
         self.window.sheet.name = EditText((15, 15, -15, 22), "", placeholder="Name")
         self.window.sheet.email_address = EditText((15, 43, -15, 22), "", placeholder="Email Address")
@@ -185,9 +179,6 @@ class ReleaseWindow(BaseWindowController):
                                                  callback=self.create_subscriber)
         self.window.sheet.setDefaultButton(self.window.sheet.create_button)
         self.window.sheet.open()
-
-    def close_sheet(self, *args):
-        self.window.sheet.close()
 
     def create_subscriber(self, *args):
         name = self.window.sheet.name.get()
@@ -204,6 +195,20 @@ class ReleaseWindow(BaseWindowController):
             self.close_sheet()
         else:
             ErrorMessage("Couldn't create that subscriber", json["errors"])
+
+    def remove_subscriber(self, sender):
+        family_id_storage = LibStorage(self.font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
+        token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
+        api = Ghostlines("v1", token=token)
+
+        for index in self.window.subscribers.getSelection():
+            subscriber = self.window.subscribers[index]
+            api.delete_subscriber(subscriber["id"])
+            font_family = api.font_family(family_id_storage.retrieve()).json()
+            self.window.subscribers.set(font_family["subscribers"])
+
+    def close_sheet(self, *args):
+        self.window.sheet.close()
 
     def update_send_button(self, sender):
         self.window.release_info.send_button.amount = len(self.window.subscribers.getSelection())
