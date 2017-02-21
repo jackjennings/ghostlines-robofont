@@ -30,7 +30,7 @@ class CreateFontFamilyWindow(BaseWindowController):
         self.window.open()
 
     def create(self, _):
-        token = AppStorage('pm.ghostlines.ghostlines.access_token').retrieve()
+        token = AppStorage('pm.ghostlines.ghostlines.accessToken').retrieve()
         api = Ghostlines("v1", token=token)
         name = self.window.family_name.get()
         designer_name = self.window.designer_name.get()

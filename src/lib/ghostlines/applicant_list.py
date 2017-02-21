@@ -62,14 +62,14 @@ class ApplicantList(Group):
         selected_applicants = [self.list[i] for i in self.list.getSelection()]
 
         for applicant in selected_applicants:
-            token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
+            token = AppStorage("pm.ghostlines.ghostlines.accessToken").retrieve()
             Ghostlines('v1', token=token).approve_applicant(applicant["id"])
 
         self.after_approve()
         self.fetch()
 
     def enable(self, *args):
-        token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
+        token = AppStorage("pm.ghostlines.ghostlines.accessToken").retrieve()
         response = Ghostlines('v1', token=token).enable_applicants_v1(self.family_id)
         json = response.json()
 
@@ -81,7 +81,7 @@ class ApplicantList(Group):
 
     def fetch(self):
         if self.enabled:
-            token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
+            token = AppStorage("pm.ghostlines.ghostlines.accessToken").retrieve()
             response = Ghostlines('v1', token=token).applicant_roster(self.family_id)
             self.applicant_roster = response.json()
             self.set(self.applicant_roster["applicants"])

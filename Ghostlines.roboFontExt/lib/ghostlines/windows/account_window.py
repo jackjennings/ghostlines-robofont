@@ -13,7 +13,7 @@ class AccountWindow(object):
 
     @property
     def is_logged_in(self):
-        token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
+        token = AppStorage("pm.ghostlines.ghostlines.accessToken").retrieve()
         # TODO: Retrieve returns NSNull if set to None. Empty string used to clear password for now.
         return token != '' and token is not None
 
