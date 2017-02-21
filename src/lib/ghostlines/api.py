@@ -52,9 +52,15 @@ class Ghostlines(object):
         return requests.post(url, data=data, headers=headers)
 
     def font_family(self, id):
-        url = self.path('font_family/{}'.format(id))
         headers = {'Authorization': 'Bearer {}'.format(self.token)}
+        url = self.path('font_family/{}'.format(id))
         return requests.get(url, headers=headers)
+
+    def create_subscriber(self, font_family_id, name, email_address):
+        data = {'font_family_id': font_family_id, 'name': name, 'email_address': email_address}
+        headers = {'Authorization': 'Bearer {}'.format(self.token)}
+        url = self.path('subscriber')
+        return requests.post(url, data=data, headers=headers)
 
     def path(self, endpoint):
         return '{}/{}/{}'.format(env.api_url, self.version, endpoint)

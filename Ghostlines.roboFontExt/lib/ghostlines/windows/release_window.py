@@ -13,6 +13,7 @@ from ghostlines.font_recipients import FontRecipients
 from ghostlines.background import Background
 from ghostlines.applicant_list import ApplicantList
 from ghostlines.attribution_text import AttributionText
+from ghostlines.error_message import ErrorMessage
 from ghostlines.fields.notes_editor import NotesEditor
 from ghostlines.fields.email_address_field import EmailAddressField
 from ghostlines.fields.file_upload_field import FileUploadField
@@ -37,31 +38,13 @@ class ReleaseWindow(BaseWindowController):
     def __init__(self, font):
         self.font = font
 
-        self.subscribers = FontRecipients(self.font)
+        self.subscribers = self.font_family["subscribers"]
         self.applicants = []
         self.note_draft_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.release_notes_draft')
         self.email_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.designer_email_address')
         self.license_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.license_filepath')
 
         self.window.background = Background((-299, -52, 299, 52))
-
-        self.window.subscribers_label = TextBox((15, 15, 270, 22), "Subscribers", sizeStyle="small")
-        self.window.subscribers = List((15, 37, 270, 205),
-                                      self.subscribers,
-                                      selectionCallback=self.update_send_button)
-        self.window.subscribers.setSelection([])
-
-        self.window.subscribers_tip = TextBox((15, 253, 270, 14),
-                                             "cmd+click to select subset",
-                                             alignment="right",
-                                             sizeStyle="small")
-
-        self.window.add_recipient_button = Button((15, 248, 30, 24), "+", callback=self.add_recipient)
-        self.window.remove_recipient_button = Button((55, 248, 30, 24), "-", callback=self.remove_recipient)
-
-        self.window.applicants = ApplicantList((15, 295, 270, 200), self.font, self.applicants, self.subscribers, after_approve=self.add_approved_applicant)
-
-        self.window.vertical_line = VerticalLine((300, 0, 1, -0))
 
         self.window.release_info = Group((315, 15, -15, -15))
 
@@ -82,6 +65,35 @@ class ReleaseWindow(BaseWindowController):
         self.window.release_info.send_button = CounterButton((0, -24, -0, 24),
                                                         ("Send Release to All", "Send Release to {}"),
                                                         callback=self.send)
+
+        self.window.vertical_line = VerticalLine((300, 0, 1, -0))
+
+        self.window.subscribers_label = TextBox((15, 15, 270, 22), "Subscribers", sizeStyle="small")
+        self.window.subscribers = List((15, 37, 270, 205),
+                                       self.subscribers,
+                                       columnDescriptions=[
+                                           {
+                                               "title": "Name",
+                                               "key": "name",
+                                               "editable": False
+                                           }, {
+                                               "title": "Email Address",
+                                               "key": "email_address",
+                                               "editable": False
+                                           }
+                                       ],
+                                       selectionCallback=self.update_send_button)
+        self.window.subscribers.setSelection([])
+
+        self.window.subscribers_tip = TextBox((15, 253, 270, 14),
+                                             "cmd+click to select subset",
+                                             alignment="right",
+                                             sizeStyle="small")
+
+        self.window.add_subscriber_button = Button((15, 248, 30, 24), "+", callback=self.add_subscriber)
+        self.window.remove_recipient_button = Button((55, 248, 30, 24), "-", callback=self.remove_recipient)
+
+        self.window.applicants = ApplicantList((15, 295, 270, 200), self.font, self.applicants, self.subscribers, after_approve=self.add_approved_applicant)
 
         self.window.bind("became main", self.fetch_applicants)
 
@@ -161,28 +173,37 @@ class ReleaseWindow(BaseWindowController):
 
         self.window.subscribers.set(self.subscribers)
 
-    def add_recipient(self, sender):
-        self.window.sheet = Sheet((250, 89), self.window)
-        self.window.sheet.recipient = EditText((15, 15, -15, 22), "", placeholder="Email Address")
-        self.window.sheet.cancel_button = Button((-190, 52, 80, 22),
+    def add_subscriber(self, sender):
+        self.window.sheet = Sheet((250, 107), self.window)
+        self.window.sheet.name = EditText((15, 15, -15, 22), "", placeholder="Name")
+        self.window.sheet.email_address = EditText((15, 43, -15, 22), "", placeholder="Email Address")
+        self.window.sheet.cancel_button = Button((-190, 70, 80, 22),
                                                  'Cancel',
                                                  callback=self.close_sheet)
-        self.window.sheet.create_button = Button((-95, 52, 80, 22),
+        self.window.sheet.create_button = Button((-95, 70, 80, 22),
                                                  'Add',
-                                                 callback=self.create_recipient)
+                                                 callback=self.create_subscriber)
         self.window.sheet.setDefaultButton(self.window.sheet.create_button)
         self.window.sheet.open()
 
     def close_sheet(self, *args):
         self.window.sheet.close()
 
-    def create_recipient(self, *args):
-        email = self.window.sheet.recipient.get()
+    def create_subscriber(self, *args):
+        name = self.window.sheet.name.get()
+        email_address = self.window.sheet.email_address.get()
+        family_id_storage = LibStorage(self.font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
+        token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
+        api = Ghostlines("v1", token=token)
+        response = api.create_subscriber(family_id_storage.retrieve(), name, email_address)
+        json = response.json()
 
-        if not email is '':
-            self.subscribers.append(email)
-            self.window.subscribers.set(self.subscribers)
+        if response.status_code == 201:
+            font_family = api.font_family(family_id_storage.retrieve()).json()
+            self.window.subscribers.set(font_family["subscribers"])
             self.close_sheet()
+        else:
+            ErrorMessage("Couldn't create that subscriber", json["errors"])
 
     def update_send_button(self, sender):
         self.window.release_info.send_button.amount = len(self.window.subscribers.getSelection())
