@@ -194,6 +194,7 @@ class ReleaseWindow(BaseWindowController):
 
         if response.status_code == 201:
             self.refresh_subscribers()
+            self.close_sheet()
         else:
             ErrorMessage("Couldn't create that subscriber", json["errors"])
 
