@@ -44,7 +44,6 @@ class ReleaseWindow(BaseWindowController):
         self.family_id_storage = LibStorage(self.font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
 
         self.subscribers = self.font_family["subscribers"]
-        self.applicants = []
 
         self.window.background = Background((-299, -52, 299, 52))
 
@@ -96,7 +95,7 @@ class ReleaseWindow(BaseWindowController):
         self.window.remove_subscriber_button = Button((55, 248, 30, 24), "-", callback=self.remove_subscriber)
 
         self.window.applicants = \
-            ApplicantList((15, 295, 270, 200),
+            ApplicantList((15, 295, 270, 210),
                           self.font_family["applicant_roster"],
                           self.family_id_storage.retrieve(),
                           after_approve=self.refresh_subscribers)
@@ -234,7 +233,7 @@ class ReleaseWindow(BaseWindowController):
 
     @lazy_property
     def window(self):
-        return Window((600, 510),
+        return Window((600, 520),
                       autosaveName=self.__class__.__name__,
                       title=self.title)
 
