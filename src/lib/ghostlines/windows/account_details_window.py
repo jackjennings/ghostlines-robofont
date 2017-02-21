@@ -22,13 +22,13 @@ class AccountDetailsWindow(BaseWindowController):
         self.window.open()
 
     def sign_out(self, _):
-        AppStorage("pm.ghostlines.ghostlines.accessToken").store('')
+        AppStorage("accessToken").store('')
         self.logout_window(self.__class__).open()
         self.window.close()
 
     @lazy_property
     def account(self):
-        token = AppStorage('pm.ghostlines.ghostlines.accessToken').retrieve()
+        token = AppStorage('accessToken').retrieve()
         request = requests.get('{}/v1/account'.format(env.api_url), headers={'Authorization': 'Bearer {}'.format(token)})
         return request.json()
 

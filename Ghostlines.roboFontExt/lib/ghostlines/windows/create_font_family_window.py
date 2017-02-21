@@ -30,14 +30,14 @@ class CreateFontFamilyWindow(BaseWindowController):
         self.window.open()
 
     def create(self, _):
-        token = AppStorage('pm.ghostlines.ghostlines.accessToken').retrieve()
+        token = AppStorage('accessToken').retrieve()
         api = Ghostlines("v1", token=token)
         name = self.window.family_name.get()
         designer_name = self.window.designer_name.get()
         response = api.create_font_family(name, designer_name)
         json = response.json()
         if response.status_code == 201:
-            family_id_storage = LibStorage(self.font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
+            family_id_storage = LibStorage(self.font.lib, "fontFamilyId")
             family_id_storage.store(json["id"])
 
             if self.font.info.designer is None:

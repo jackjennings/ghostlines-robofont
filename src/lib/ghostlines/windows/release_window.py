@@ -38,14 +38,14 @@ class ReleaseWindow(BaseWindowController):
     def __init__(self, font):
         self.font = font
 
-        self.note_draft_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.release_notes_draft')
-        self.email_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.designer_email_address')
-        self.license_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.license_filepath')
-        self.family_id_storage = LibStorage(self.font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
+        self.note_draft_storage = LibStorage(self.font.lib, "release_notes_draft")
+        self.email_storage = LibStorage(self.font.lib, "designer_email_address")
+        self.license_storage = LibStorage(self.font.lib, "license_filepath")
+        self.family_id_storage = LibStorage(self.font.lib, "fontFamilyId")
 
         self.subscribers = self.font_family["subscribers"]
 
-        self.window.background = Background((-299, -52, 299, 52))
+        self.window.background = Background((-299, -52, 299, 52), alpha=0.05)
 
         self.window.release_info = Group((315, 15, -15, -15))
 
@@ -106,7 +106,7 @@ class ReleaseWindow(BaseWindowController):
         self.window.applicants.fetch()
 
     def refresh_subscribers(self, *args):
-        token = AppStorage("pm.ghostlines.ghostlines.accessToken").retrieve()
+        token = AppStorage("accessToken").retrieve()
         api = Ghostlines("v1", token=token)
         font_family = api.font_family(self.family_id_storage.retrieve()).json()
         self.window.subscribers.set(font_family["subscribers"])
@@ -160,7 +160,7 @@ class ReleaseWindow(BaseWindowController):
                     content_type = filetypes[extension]
                     params['license'] = (filename, license.read(), content_type)
 
-            token = AppStorage("pm.ghostlines.ghostlines.accessToken").retrieve()
+            token = AppStorage("accessToken").retrieve()
             response = Ghostlines('v1', token=token).create_release(**params)
 
             if response.status_code == requests.codes.created:
@@ -187,7 +187,7 @@ class ReleaseWindow(BaseWindowController):
     def create_subscriber(self, *args):
         name = self.window.sheet.name.get()
         email_address = self.window.sheet.email_address.get()
-        token = AppStorage("pm.ghostlines.ghostlines.accessToken").retrieve()
+        token = AppStorage("accessToken").retrieve()
         api = Ghostlines("v1", token=token)
         response = api.create_subscriber(self.family_id_storage.retrieve(), name, email_address)
         json = response.json()
@@ -198,7 +198,7 @@ class ReleaseWindow(BaseWindowController):
             ErrorMessage("Couldn't create that subscriber", json["errors"])
 
     def remove_subscriber(self, sender):
-        token = AppStorage("pm.ghostlines.ghostlines.accessToken").retrieve()
+        token = AppStorage("accessToken").retrieve()
         api = Ghostlines("v1", token=token)
 
         for index in self.window.subscribers.getSelection():
@@ -239,5 +239,5 @@ class ReleaseWindow(BaseWindowController):
 
     @lazy_property
     def font_family(self):
-        token = AppStorage("pm.ghostlines.ghostlines.accessToken").retrieve()
+        token = AppStorage("accessToken").retrieve()
         return Ghostlines("v1", token=token).font_family(self.family_id_storage.retrieve()).json()

@@ -1,8 +1,11 @@
+from ghostlines import env
+
+
 class LibStorage(object):
 
     def __init__(self, lib, key):
         self.lib = lib
-        self.key = key
+        self.key = "{}.{}".format(env.key_base, key)
 
     def store(self, content):
         if content is None and self.lib.has_key(self.key):

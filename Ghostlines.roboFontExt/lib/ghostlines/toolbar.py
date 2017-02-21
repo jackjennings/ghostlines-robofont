@@ -67,11 +67,11 @@ class GhostlinesToolbar(object):
             CreateFontFamilyWindow(font, success_window=ReleaseWindow).open()
 
     def has_legacy_data(self, font):
-        legacy_storage = LibStorage(font.lib, "pm.ghostlines.ghostlines.recipients")
+        legacy_storage = LibStorage(font.lib, "recipients")
         return legacy_storage.retrieve(default=None) is not None
 
     def has_family(self, font):
-        family_id_storage = LibStorage(font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
+        family_id_storage = LibStorage(font.lib, "fontFamilyId")
         return family_id_storage.retrieve(default=None) is not None
 
     def toolbar_icon_for_action(self, font):

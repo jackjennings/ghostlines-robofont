@@ -37,7 +37,7 @@ class SignInWindow(BaseWindowController):
         if response.status_code == 201: # Success!
             account = json['account']
             token = json['token']
-            AppStorage('pm.ghostlines.ghostlines.accessToken').store(token)
+            AppStorage('accessToken').store(token)
             self.success_window(self.__class__, account=account).open()
             self.window.close()
         else:

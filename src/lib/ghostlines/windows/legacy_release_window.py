@@ -37,9 +37,9 @@ class LegacyReleaseWindow(BaseWindowController):
         self.font = font
         self.recipients = FontRecipients(self.font)
         self.applicants = []
-        self.note_draft_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.release_notes_draft')
-        self.email_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.designer_email_address')
-        self.license_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.license_filepath')
+        self.note_draft_storage = LibStorage(self.font.lib, "release_notes_draft")
+        self.email_storage = LibStorage(self.font.lib, "designer_email_address")
+        self.license_storage = LibStorage(self.font.lib, "license_filepath")
 
         self.window.background = Background((0, 0, -0, 235))
         self.window.attribution = AttributionText((15, 15, -15, 22), font)
