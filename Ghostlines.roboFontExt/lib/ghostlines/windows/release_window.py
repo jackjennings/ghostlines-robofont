@@ -38,11 +38,13 @@ class ReleaseWindow(BaseWindowController):
     def __init__(self, font):
         self.font = font
 
-        self.subscribers = self.font_family["subscribers"]
-        self.applicants = []
         self.note_draft_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.release_notes_draft')
         self.email_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.designer_email_address')
         self.license_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.license_filepath')
+        self.family_id_storage = LibStorage(self.font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
+
+        self.subscribers = self.font_family["subscribers"]
+        self.applicants = []
 
         self.window.background = Background((-299, -52, 299, 52))
 
@@ -93,16 +95,22 @@ class ReleaseWindow(BaseWindowController):
         self.window.show_subscriber_sheet_button = Button((15, 248, 30, 24), "+", callback=self.show_subscriber_sheet)
         self.window.remove_subscriber_button = Button((55, 248, 30, 24), "-", callback=self.remove_subscriber)
 
-        self.window.applicants = ApplicantList((15, 295, 270, 200), self.font, self.applicants, self.subscribers, after_approve=self.add_approved_applicant)
+        self.window.applicants = \
+            ApplicantList((15, 295, 270, 200),
+                          self.font_family["applicant_roster"],
+                          self.family_id_storage.retrieve(),
+                          after_approve=self.refresh_subscribers)
 
         self.window.bind("became main", self.fetch_applicants)
 
     def fetch_applicants(self, sender):
         self.window.applicants.fetch()
 
-    def add_approved_applicant(self, email):
-        self.subscribers.append(email)
-        self.window.subscribers.set(self.subscribers)
+    def refresh_subscribers(self, *args):
+        token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
+        api = Ghostlines("v1", token=token)
+        font_family = api.font_family(self.family_id_storage.retrieve()).json()
+        self.window.subscribers.set(font_family["subscribers"])
 
     def open(self):
         if not self.font.info.familyName:
@@ -183,29 +191,25 @@ class ReleaseWindow(BaseWindowController):
     def create_subscriber(self, *args):
         name = self.window.sheet.name.get()
         email_address = self.window.sheet.email_address.get()
-        family_id_storage = LibStorage(self.font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
         token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
         api = Ghostlines("v1", token=token)
-        response = api.create_subscriber(family_id_storage.retrieve(), name, email_address)
+        response = api.create_subscriber(self.family_id_storage.retrieve(), name, email_address)
         json = response.json()
 
         if response.status_code == 201:
-            font_family = api.font_family(family_id_storage.retrieve()).json()
-            self.window.subscribers.set(font_family["subscribers"])
-            self.close_sheet()
+            self.refresh_subscribers()
         else:
             ErrorMessage("Couldn't create that subscriber", json["errors"])
 
     def remove_subscriber(self, sender):
-        family_id_storage = LibStorage(self.font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
         token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
         api = Ghostlines("v1", token=token)
 
         for index in self.window.subscribers.getSelection():
             subscriber = self.window.subscribers[index]
             api.delete_subscriber(subscriber["id"])
-            font_family = api.font_family(family_id_storage.retrieve()).json()
-            self.window.subscribers.set(font_family["subscribers"])
+
+        self.refresh_subscribers()
 
     def close_sheet(self, *args):
         self.window.sheet.close()
@@ -234,6 +238,5 @@ class ReleaseWindow(BaseWindowController):
 
     @lazy_property
     def font_family(self):
-        family_id_storage = LibStorage(self.font.lib, "pm.ghostlines.ghostlines.fontFamilyId")
         token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
-        return Ghostlines("v1", token=token).font_family(family_id_storage.retrieve()).json()
+        return Ghostlines("v1", token=token).font_family(self.family_id_storage.retrieve()).json()

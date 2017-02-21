@@ -2,6 +2,8 @@ import webbrowser
 
 from ghostlines.api import Ghostlines
 from ghostlines.dashed_rectangle import DashedRectangle
+from ghostlines.error_message import ErrorMessage
+from ghostlines.storage.app_storage import AppStorage
 
 from vanilla import Group, Button, List, TextBox
 
@@ -14,23 +16,35 @@ def CenteredButton(boxWidth, boxHeight, width, height, *args, **kwargs):
 
 class ApplicantList(Group):
 
-    def __init__(self, dimensions, font, applicants, recipients, after_approve=None):
+    columns = [
+        {
+            "title": "Name",
+            "key": "name",
+            "editable": False
+        }, {
+            "title": "Email Address",
+            "key": "email_address",
+            "editable": False
+        }
+    ]
+
+    def __init__(self, dimensions, applicant_roster, font_family_id, after_approve=None):
         super(ApplicantList, self).__init__(dimensions)
 
         _, _, width, height = self.getPosSize()
 
-        self.recipients = recipients
-        self.applicants = applicants
-        self.font = font
+        self.applicant_roster = applicant_roster
+        self.family_id = font_family_id
         self.after_approve = after_approve
 
         self.border = DashedRectangle((0, 0, width, height))
-        self.activate_registry_button = CenteredButton(width, height, 190, 24,
-                                                       "Create Application Form",
-                                                       callback=self.activate)
+        self.enable_registry_button = CenteredButton(width, height, 190, 24,
+                                                     "Create Application Form",
+                                                     callback=self.enable)
 
         self.label = TextBox((0, 0, -0, 22), "Applicants")
-        self.list = List((0, 23, 0, -34), applicants)
+        # TODO: Add applicants
+        self.list = List((0, 23, 0, -34), [], columnDescriptions=self.columns)
         self.approve_applicant_button = Button((0, -24, 90, 24),
                                                "Approve",
                                                callback=self.approve_applicant)
@@ -39,54 +53,56 @@ class ApplicantList(Group):
                                                     callback=self.open_registration_page,
                                                     sizeStyle="small")
 
-        self.activated = font.lib.has_key('pm.ghostlines.ghostlines.registry_token')
+        self.enabled = self.applicant_roster is not None
 
     def open_registration_page(self, *args):
-        response = Ghostlines('v0.1').registry(self.font.lib['pm.ghostlines.ghostlines.registry_token'])
-        registry = response.json()
-        webbrowser.open(registry['url'])
+        webbrowser.open(self.applicant_roster['url'])
 
     def approve_applicant(self, *args):
         selected_applicants = [self.list[i] for i in self.list.getSelection()]
 
         for applicant in selected_applicants:
-            Ghostlines('v0.1').approve(self.font.lib['pm.ghostlines.ghostlines.registry_token'], applicant)
-            self.after_approve(applicant)
+            token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
+            Ghostlines('v1', token=token).approve_applicant(applicant["id"])
 
+        self.after_approve()
         self.fetch()
 
-    def activate(self, *args):
-        response = Ghostlines('v0.1').enable_applicants({
-            'font_name': self.font.info.familyName,
-            'designer': self.font.info.designer
-        })
+    def enable(self, *args):
+        token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
+        response = Ghostlines('v1', token=token).enable_applicants_v1(self.family_id)
+        json = response.json()
 
-        registry = response.json()
-
-        self.font.lib['pm.ghostlines.ghostlines.registry_token'] = registry['token']
-        self.activated = True
+        if response.status_code == 201:
+            self.applicant_roster = json
+            self.enabled = True
+        else:
+            ErrorMessage("Could not enable applicants", json["errors"]).open()
 
     def fetch(self):
-        if self.font.lib.has_key('pm.ghostlines.ghostlines.registry_token'):
-            response = Ghostlines('v0.1').registry(self.font.lib['pm.ghostlines.ghostlines.registry_token'])
-            registry = response.json()
-            applicant_emails = [r['email_address'] for r in registry['applicants'] if not r['approved_at']]
+        if self.enabled:
+            token = AppStorage("pm.ghostlines.ghostlines.access_token").retrieve()
+            response = Ghostlines('v1', token=token).applicant_roster(self.family_id)
+            self.applicant_roster = response.json()
+            self.set(self.applicant_roster["applicants"])
 
-            self.list.set(applicant_emails)
+    def set(self, applicants):
+        unapproved = [a for a in applicants if a["approved_at"] is None]
+        self.list.set(unapproved)
 
     @property
-    def activated(self):
-        return self._activated
+    def enabled(self):
+        return self._enabled
 
-    @activated.setter
-    def activated(self, value):
-        self._activated = value
+    @enabled.setter
+    def enabled(self, value):
+        self._enabled = value
 
         self.label.show(value)
         self.list.show(value)
         self.approve_applicant_button.show(value)
         self.border.show(not value)
-        self.activate_registry_button.show(not value)
+        self.enable_registry_button.show(not value)
         self.open_registration_page_button.show(value)
 
-        return self.activated
+        return self.enabled

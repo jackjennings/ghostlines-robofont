@@ -11,7 +11,7 @@ from ghostlines.lazy_property import lazy_property
 from ghostlines.api import Ghostlines
 from ghostlines.font_recipients import FontRecipients
 from ghostlines.background import Background
-from ghostlines.applicant_list import ApplicantList
+from ghostlines.legacy.applicant_list import ApplicantList
 from ghostlines.attribution_text import AttributionText
 from ghostlines.fields.notes_editor import NotesEditor
 from ghostlines.fields.email_address_field import EmailAddressField
