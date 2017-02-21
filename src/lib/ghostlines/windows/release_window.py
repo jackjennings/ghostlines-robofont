@@ -123,14 +123,12 @@ class ReleaseWindow(BaseWindowController):
 
         self.window.open()
 
-    def send(self, sender):
+    def send(self, *_):
         subscribers = self.window.subscribers.get()
-        selection = [subscribers[i] for i in self.window.subscribers.getSelection()]
-
-        if selection == []:
-            selection = self.window.subscribers.get()
-
-        subscribers = ', '.join(selection)
+        subscriber_ids = [subscribers[i]["id"] for i in self.window.subscribers.getSelection()]
+        notes = self.note_draft_storage.retrieve()
+        font_family_id = self.family_id_storage.retrieve()
+        license_path = self.license_storage.retrieve()
 
         progress = ProgressWindow('', tickCount=3, parentWindow=self.window)
 
@@ -140,38 +138,37 @@ class ReleaseWindow(BaseWindowController):
             progress.update('Generating OTF')
 
             # Should be controlled which options are used somewhere
-            filename = os.path.join(tmpdir, self.font.info.familyName + '.otf')
-
-            self.font.generate(filename, "otf", decompose=True, checkOutlines=True, autohint=True)
+            otf_path = os.path.join(tmpdir, '{}.otf'.format(self.font.info.familyName))
+            self.font.generate(otf_path, "otf", decompose=True, checkOutlines=True, autohint=True)
 
             progress.update('Sending via Ghostlines')
 
-            with open(filename, 'rb') as otf:
-                params = dict(
-                    otf=otf,
-                    recipients=subscribers,
-                    notes=self.window.notes_field.get(),
-                    designer_email_address=self.window.email_address_field.get()
-                )
+            params = dict(
+                notes=notes,
+                font_family_id=font_family_id
+            )
 
-                license_path = self.license_storage.retrieve()
+            with open(otf_path, 'rb') as otf:
+                params['otfs'] = [(os.path.basename(otf_path), otf.read(), "application/octet-stream")]
 
-                if license_path is not '' and os.path.exists(license_path):
-                    with open(license_path, 'rb') as license:
-                        filename = os.path.basename(license_path)
-                        _, extension = os.path.splitext(license_path)
-                        content_type = filetypes[extension]
-                        params['license'] = (filename, license, content_type)
-                        response = Ghostlines('v0.1').send(**params)
-                else:
-                    response = Ghostlines('v0.1').send(**params)
+            if subscriber_ids:
+                params['subscriber_ids'] = subscriber_ids
+
+            if self.license_exists:
+                with open(license_path, 'rb') as license:
+                    filename = os.path.basename(license_path)
+                    _, extension = os.path.splitext(license_path)
+                    content_type = filetypes[extension]
+                    params['license'] = (filename, license.read(), content_type)
+
+            token = AppStorage("pm.ghostlines.ghostlines.accessToken").retrieve()
+            response = Ghostlines('v1', token=token).create_release(**params)
 
             if response.status_code == requests.codes.created:
                 message("{} was delivered".format(self.font.info.familyName))
             else:
-                print repr(response)
-                message("{} could not be delivered".format(self.font.info.familyName),
-                        "Error code: {}\n{}".format(response.status_code, response.json()))
+                ErrorMessage("{} could not be delivered".format(self.font.info.familyName),
+                             response.json()["errors"])
         finally:
             progress.close()
 
@@ -229,6 +226,11 @@ class ReleaseWindow(BaseWindowController):
     @property
     def title(self):
         return "Ghostlines: Release {}".format(self.font.info.familyName)
+
+    @property
+    def license_exists(self):
+        filepath = self.license_storage.retrieve()
+        return filepath is not '' and os.path.exists(filepath)
 
     @lazy_property
     def window(self):
