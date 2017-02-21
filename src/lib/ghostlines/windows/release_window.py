@@ -43,6 +43,8 @@ class ReleaseWindow(BaseWindowController):
         self.email_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.designer_email_address')
         self.license_storage = LibStorage(self.font.lib, 'pm.ghostlines.ghostlines.license_filepath')
 
+        self.window.background = Background((-299, -52, 299, 52))
+
         self.window.subscribers_label = TextBox((15, 15, 270, 22), "Subscribers", sizeStyle="small")
         self.window.subscribers = List((15, 37, 270, 205),
                                       self.subscribers,

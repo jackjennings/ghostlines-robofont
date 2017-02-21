@@ -10,7 +10,7 @@ class Background(ImageView):
 
         colorTile = NSImage.alloc().initWithSize_((10, 10))
         colorTile.lockFocus()
-        color = NSColor.colorWithCalibratedWhite_alpha_(0, 1)
+        color = NSColor.colorWithCalibratedWhite_alpha_(0, 0.05)
         color.set()
         NSRectFillUsingOperation(((0, 0), (10, 10)), NSCompositeSourceOver)
         colorTile.unlockFocus()
