@@ -20,7 +20,7 @@ class SignInWindow(BaseWindowController):
         self.window.email_field = EditText((15, 61, -15, 22))
         self.window.password_label = TextBox((15, 101, -15, 22), 'Password:', sizeStyle='small')
         self.window.password_field = EditText((15, 119, -15, 22))
-        self.window.need_account_button = Button((15, -38, 110, 22), 'Need Account?', callback=self.make_account)
+        self.window.need_account_button = Button((15, -35, 110, 17), 'Need Account?', callback=self.make_account, sizeStyle="small")
         self.window.sign_in_button = Button((175, -38, 110, 22), 'Sign In', callback=self.sign_in)
         self.window.setDefaultButton(self.window.sign_in_button)
 
@@ -44,7 +44,7 @@ class SignInWindow(BaseWindowController):
             ErrorMessage('Sign In Error', json['errors']).open()
 
     def make_account(self, _):
-        webbrowser.open('https://ghostlines.pm/signup')
+        webbrowser.open('https://ghostlines.pm/signup/')
 
     @lazy_property
     def window(self):
