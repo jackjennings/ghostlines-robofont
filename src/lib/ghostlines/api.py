@@ -96,6 +96,11 @@ class Ghostlines(object):
         url = self.path('release')
         return self.post(url, data=data, headers=headers, files=files)
 
+    def authenticate(self, email_address, password):
+        data = {'email_address': email_address, 'password': password}
+        url = self.path('authenticate')
+        return self.post(url, data=data)
+
     def get(self, url, headers=None, **kwargs):
         if headers is None:
             headers = {}
