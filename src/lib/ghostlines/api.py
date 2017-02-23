@@ -101,6 +101,11 @@ class Ghostlines(object):
         url = self.path('authenticate')
         return self.post(url, data=data)
 
+    def account(self):
+        headers = {'Authorization': 'Bearer {}'.format(self.token)}
+        url = self.path('account')
+        return requests.get(url, headers=headers)
+
     def get(self, url, headers=None, **kwargs):
         if headers is None:
             headers = {}
