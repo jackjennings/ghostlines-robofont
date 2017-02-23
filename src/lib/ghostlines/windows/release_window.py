@@ -8,6 +8,7 @@ from defconAppKit.windows.baseWindow import BaseWindowController
 from defconAppKit.windows.progressWindow import ProgressWindow
 
 from ghostlines.lazy_property import lazy_property
+from ghostlines.authentication import Authentication
 from ghostlines.api import Ghostlines
 from ghostlines.font_recipients import FontRecipients
 from ghostlines.background import Background
@@ -33,6 +34,7 @@ filetypes = {
 }
 
 
+@Authentication.require
 class ReleaseWindow(BaseWindowController):
 
     def __init__(self, font):

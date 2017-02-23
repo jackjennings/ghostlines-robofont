@@ -5,6 +5,7 @@ from defconAppKit.windows.baseWindow import BaseWindowController
 
 from ghostlines import env
 from ghostlines.api import Ghostlines
+from ghostlines.authentication import Authentication
 from ghostlines.lazy_property import lazy_property
 from ghostlines.error_message import ErrorMessage
 from ghostlines.windows.sign_in_window import SignInWindow
@@ -12,6 +13,7 @@ from ghostlines.storage.app_storage import AppStorage
 from ghostlines.storage.lib_storage import LibStorage
 
 
+@Authentication.require
 class CreateFontFamilyWindow(BaseWindowController):
 
     def __init__(self, font, success_window):

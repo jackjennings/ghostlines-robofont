@@ -14,7 +14,8 @@ class AccountWindow(object):
     @property
     def is_logged_in(self):
         token = AppStorage("accessToken").retrieve()
-        # TODO: Retrieve returns NSNull if set to None. Empty string used to clear password for now.
+        # TODO: Retrieve returns NSNull if set to None. Empty string is
+        # used to clear password for now, so check for None or ''
         return token != '' and token is not None
 
     def open(self):
