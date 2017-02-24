@@ -1,6 +1,8 @@
 Changelog
 =========
 
+* Change snake case to camel case for lib keys
+* Add MigrationAssistant to the legacy release window
 * Update requests package (2.13.0)
 * Update certifi bundle (v. 2017.01.23)
 * Added login and account windows (ltwp)

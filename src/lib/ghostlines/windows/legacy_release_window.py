@@ -7,8 +7,9 @@ from vanilla.dialogs import message
 from defconAppKit.windows.baseWindow import BaseWindowController
 from defconAppKit.windows.progressWindow import ProgressWindow
 
-from ghostlines.lazy_property import lazy_property
 from ghostlines.api import Ghostlines
+from ghostlines.authentication import Authentication
+from ghostlines.lazy_property import lazy_property
 from ghostlines.font_recipients import FontRecipients
 from ghostlines.background import Background
 from ghostlines.legacy.applicant_list import ApplicantList
@@ -18,7 +19,9 @@ from ghostlines.fields.email_address_field import EmailAddressField
 from ghostlines.fields.file_upload_field import FileUploadField
 from ghostlines.ui.counter_button import CounterButton
 from ghostlines.storage.lib_storage import LibStorage
+from ghostlines.storage.app_storage import AppStorage
 from ghostlines.text import WhiteText
+
 
 full_requirements_message = "Both a family name and a designer need to be set in order to provide enough information in the email to your testers."
 
@@ -41,6 +44,14 @@ class LegacyReleaseWindow(BaseWindowController):
         self.email_storage = LibStorage(self.font.lib, "designer_email_address")
         self.license_storage = LibStorage(self.font.lib, "license_filepath")
 
+        self.window.banner_background = Background((0, -40, 0, 40), 1)
+        self.window.upgrade_tip = TextBox((15, -30, -15, 22),
+                                          WhiteText("Ghostlines is out of Beta. If you have an account, upgrade:"))
+        self.window.upgrade_button = Button((-205, -31, 185, 22),
+                                            "Migrate from Beta",
+                                            callback=self.migrate,
+                                            sizeStyle="small")
+
         self.window.background = Background((0, 0, -0, 235))
         self.window.attribution = AttributionText((15, 15, -15, 22), font)
         self.window.send_button = CounterButton((-215, 12, 200, 24),
@@ -60,18 +71,18 @@ class LegacyReleaseWindow(BaseWindowController):
                                                     storage=self.license_storage)
 
         self.window.recipients_label = TextBox((-285, 250, -15, 22), "Subscribers")
-        self.window.recipients = List((-285, 273, 270, -49),
+        self.window.recipients = List((-285, 273, 270, -89),
                                       self.recipients,
                                       selectionCallback=self.update_send_button)
         self.window.recipients.setSelection([])
 
-        self.window.recipients_tip = TextBox((-200, -33, 185, 14),
+        self.window.recipients_tip = TextBox((-200, -73, 185, 14),
                                              "cmd+click to select subset",
                                              alignment="right",
                                              sizeStyle="small")
 
-        self.window.add_recipient_button = Button((-285, -39, 30, 24), "+", callback=self.add_recipient)
-        self.window.remove_recipient_button = Button((-246, -39, 30, 24), "-", callback=self.remove_recipient)
+        self.window.add_recipient_button = Button((-285, -79, 30, 24), "+", callback=self.add_recipient)
+        self.window.remove_recipient_button = Button((-246, -79, 30, 24), "-", callback=self.remove_recipient)
 
         self.window.applicants = ApplicantList((15, 250, 270, 235), self.font, self.applicants, self.recipients, after_approve=self.add_approved_applicant)
 
@@ -181,12 +192,99 @@ class LegacyReleaseWindow(BaseWindowController):
     def update_send_button(self, sender):
         self.window.send_button.amount = len(self.window.recipients.getSelection())
 
+    def migrate(self, sender):
+        MigrationAssistant(self.font).open()
+        self.window.close()
+
     @property
     def title(self):
         return "Deliver {}".format(self.font.info.familyName)
 
     @lazy_property
     def window(self):
-        return Window((600, 500),
+        return Window((600, 540),
+                      autosaveName=self.__class__.__name__,
+                      title=self.title)
+
+
+@Authentication.require
+class MigrationAssistant(object):
+
+    def __init__(self, font):
+        self.font = font
+        self.recipients = FontRecipients(self.font)
+
+        if 'pm.ghostlines.ghostlines.registry_token' in self.font.lib:
+            self.roster_token = self.font.lib['pm.ghostlines.ghostlines.registry_token']
+        else:
+            self.roster_token = None
+
+        self.window.content = Group((15, 15, -15, -15))
+        self.window.content.font_name_label = TextBox((0, 0, -0, 22), "Font Name", sizeStyle="small")
+        self.window.content.font_name = TextBox((0, 19, -0, 22), self.font.info.familyName)
+        self.window.content.font_author_label = TextBox((0, 55, -0, 22), "Designer", sizeStyle="small")
+        self.window.content.font_author = TextBox((0, 74, -0, 22), self.font.info.designer)
+
+        self.window.content.recipients_label = TextBox((0, 114, -15, 22), "Subscribers", sizeStyle="small")
+        self.window.content.recipients = List((0, 135, -0, 190), self.recipients, drawFocusRing=False, allowsEmptySelection=True)
+        self.window.content.recipients.setSelection([])
+
+        self.window.content.roster_label = TextBox((0, 350, -15, 22), "Application Page", sizeStyle="small")
+        self.window.content.roster_status = TextBox((0, 370, -15, 22), self.roster_status)
+
+        self.window.content.confirmation_button = Button((0, -24, 0, 24), "Complete Migration", callback=self.migrate)
+
+        self.window.content.explainer = TextBox((0, 405, -15, 66),
+                                                "A new font entry will be created on Ghostlines with the details above. Any pending applicants will be retained if you have activated that feature.",
+                                                sizeStyle="small")
+
+        self.window.setDefaultButton(self.window.content.confirmation_button)
+
+    def open(self):
+        self.window.open()
+
+    def migrate(self, *_):
+        token = AppStorage("accessToken").retrieve()
+        api = Ghostlines("v1", token=token)
+        response = api.migrate(list(self.recipients), self.font.info.familyName, self.font.info.designer, self.roster_token)
+        json = response.json()
+
+        if response.status_code == 201:
+            LibStorage(self.font.lib, "fontFamilyId").store(json["id"])
+
+            expired_keys = [
+                'pm.ghostlines.ghostlines.registry_token',
+                'pm.ghostlines.ghostlines.recipients',
+                'pm.ghostlines.ghostlines.designer_email_address'
+            ]
+
+            for key in expired_keys:
+                if key in self.font.lib:
+                    del self.font.lib[key]
+
+            LibStorage(self.font.lib, "releaseNotesDraft").store(LibStorage(self.font.lib, "release_notes_draft").retrieve())
+            LibStorage(self.font.lib, "licenseFilepath").store(LibStorage(self.font.lib, "license_filepath").retrieve())
+
+            from ghostlines.windows.release_window import ReleaseWindow
+
+            self.window.close()
+            ReleaseWindow(self.font).open()
+        else:
+            ErrorMessage("Oops", json["errors"])
+
+    @property
+    def roster_status(self):
+        if self.roster_token is not None:
+            return "Enabled"
+        else:
+            return u"\u2014"
+
+    @property
+    def title(self):
+        return "Ghostlines: Migrate from Beta".format(self.font.info.familyName)
+
+    @lazy_property
+    def window(self):
+        return Window((320, 520),
                       autosaveName=self.__class__.__name__,
                       title=self.title)

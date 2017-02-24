@@ -40,9 +40,8 @@ class ReleaseWindow(BaseWindowController):
     def __init__(self, font):
         self.font = font
 
-        self.note_draft_storage = LibStorage(self.font.lib, "release_notes_draft")
-        self.email_storage = LibStorage(self.font.lib, "designer_email_address")
-        self.license_storage = LibStorage(self.font.lib, "license_filepath")
+        self.note_draft_storage = LibStorage(self.font.lib, "releaseNotesDraft")
+        self.license_storage = LibStorage(self.font.lib, "licenseFilepath")
         self.family_id_storage = LibStorage(self.font.lib, "fontFamilyId")
 
         self.subscribers = self.font_family["subscribers"]
@@ -56,7 +55,6 @@ class ReleaseWindow(BaseWindowController):
         self.window.release_info.font_author_label = TextBox((0, 60, -0, 22), "Designer", sizeStyle="small")
         self.window.release_info.font_author = TextBox((0, 79, -0, 22), self.font_family["designer_name"])
         self.window.release_info.version_label = TextBox((0, 120, -0, 22), "Version Number", sizeStyle="small")
-
         self.window.release_info.version = TextBox((0, 139, -0, 22), self.font_version)
 
         self.window.release_info.notes_field_label = TextBox((0, 176, -0, 22), "Release Notes", sizeStyle="small")

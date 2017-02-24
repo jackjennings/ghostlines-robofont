@@ -104,7 +104,20 @@ class Ghostlines(object):
     def account(self):
         headers = {'Authorization': 'Bearer {}'.format(self.token)}
         url = self.path('account')
-        return requests.get(url, headers=headers)
+        return self.get(url, headers=headers)
+
+    def migrate(self, subscriber_email_addresses, font_family_name, designer_name, applicant_roster_token):
+        headers = {'Authorization': 'Bearer {}'.format(self.token)}
+        data = {
+            'subscriber_email_addresses': subscriber_email_addresses,
+            'font_family_name': font_family_name,
+            'designer_name': designer_name,
+            'applicant_roster_token': applicant_roster_token
+        }
+        url = self.path('migrate')
+        return self.post(url, json=data, headers=headers)
+
+    # Utilities
 
     def get(self, url, headers=None, **kwargs):
         if headers is None:
