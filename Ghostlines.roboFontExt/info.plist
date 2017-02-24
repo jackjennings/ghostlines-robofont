@@ -31,9 +31,9 @@
 	<key>mainScript</key>
 	<string>_startup.py</string>
 	<key>name</key>
-	<string>Ghostlines (Beta)</string>
+	<string>Ghostlines</string>
 	<key>timeStamp</key>
-	<real>1487896080.35446</real>
+	<real>1487907261.695786</real>
 	<key>version</key>
 	<string>0.4.1</string>
 </dict>
