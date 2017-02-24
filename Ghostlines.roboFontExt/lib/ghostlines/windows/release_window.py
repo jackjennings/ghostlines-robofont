@@ -1,6 +1,7 @@
 import os
 import tempfile
 import requests
+import datetime
 
 from vanilla import Window, List, Button, Sheet, EditText, TextBox, Group, VerticalLine
 from vanilla.dialogs import message
@@ -46,9 +47,9 @@ class ReleaseWindow(BaseWindowController):
 
         self.subscribers = self.font_family["subscribers"]
 
-        self.window.background = Background((-299, -52, 299, 52), alpha=0.05)
+        self.window.background = Background((301, -52, 299, 52), alpha=0.05)
 
-        self.window.release_info = Group((315, 15, -15, -15))
+        self.window.release_info = Group((315, 15, 270, -15))
 
         self.window.release_info.font_name_label = TextBox((0, 0, -0, 22), "Font Name", sizeStyle="small")
         self.window.release_info.font_name = TextBox((0, 19, -0, 22), self.font_family["name"])
@@ -67,49 +68,95 @@ class ReleaseWindow(BaseWindowController):
                                                         ("Send Release to All", "Send Release to {}"),
                                                         callback=self.send)
 
-        self.window.vertical_line = VerticalLine((300, 0, 1, -0))
+        self.window.release_subscriber_divider = VerticalLine((300, 0, 1, -0))
 
-        self.window.subscribers_label = TextBox((15, 15, 270, 22), "Subscribers", sizeStyle="small")
-        self.window.subscribers = List((15, 37, 270, 205),
-                                       self.subscribers,
-                                       columnDescriptions=[
-                                           {
-                                               "title": "Name",
-                                               "key": "name",
-                                               "editable": False
-                                           }, {
-                                               "title": "Email Address",
-                                               "key": "email_address",
-                                               "editable": False
-                                           }
-                                       ],
-                                       selectionCallback=self.update_send_button)
-        self.window.subscribers.setSelection([])
+        self.window.subscriber_info = Group((15, 15, 270, -15))
 
-        self.window.subscribers_tip = TextBox((15, 253, 270, 14),
-                                             "cmd+click to select subset",
-                                             alignment="right",
-                                             sizeStyle="small")
+        self.window.subscriber_info.subscribers_label = TextBox((0, 0, -0, 22), "Subscribers", sizeStyle="small")
+        self.window.subscriber_info.subscribers = List((0, 22, -0, 205),
+                                                       self.subscribers,
+                                                       columnDescriptions=[
+                                                            {
+                                                                "title": "Name",
+                                                                "key": "name",
+                                                                "editable": False
+                                                            }, {
+                                                                "title": "Email Address",
+                                                                "key": "email_address",
+                                                                "editable": False
+                                                            }
+                                                        ],
+                                                        selectionCallback=self.update_send_button)
+        self.window.subscriber_info.subscribers.setSelection([])
 
-        self.window.show_subscriber_sheet_button = Button((15, 248, 30, 24), "+", callback=self.show_subscriber_sheet)
-        self.window.remove_subscriber_button = Button((55, 248, 30, 24), "-", callback=self.remove_subscriber)
+        self.window.subscriber_info.subscribers_tip = TextBox((0, 238, -0, 14),
+                                                              "cmd+click to select subset",
+                                                              alignment="right",
+                                                              sizeStyle="small")
 
-        self.window.applicants = \
-            ApplicantList((15, 295, 270, 210),
+        self.window.subscriber_info.show_subscriber_sheet_button = Button((0, 233, 30, 24), "+", callback=self.show_subscriber_sheet)
+        self.window.subscriber_info.remove_subscriber_button = Button((40, 233, 30, 24), "-", callback=self.remove_subscriber)
+
+        self.window.subscriber_info.applicants = \
+            ApplicantList((0, 280, 270, 210),
                           self.font_family["applicant_roster"],
                           self.family_id_storage.retrieve(),
                           after_approve=self.refresh_subscribers)
 
+        self.window.release_releases_divider = VerticalLine((600, 0, 1, -0))
+
+        self.window.releases_info = Group((615, 15, 270, -15))
+
+        self.window.releases_info.log_label = TextBox((0, 0, -0, 22), "Releases", sizeStyle="small")
+        self.window.releases_info.log = \
+            ReleaseLog((0, 22, -0, -0),
+                       self.font_family["releases"][::-1],
+                       columnDescriptions=[
+                      {
+                          "title": "Created",
+                          "key": "created_at",
+                          "editable": False
+                      }, {
+                          "title": "Version",
+                          "key": "version",
+                          "editable": False,
+                          "width": 50
+                      }, {
+                          "title": "# subs.",
+                          "key": "subscriber_count",
+                          "editable": False,
+                          "width": 50
+                      }
+                  ])
+
+        self.resize_window_for_releases()
         self.window.bind("became main", self.fetch_applicants)
 
     def fetch_applicants(self, sender):
-        self.window.applicants.fetch()
+        self.window.subscriber_info.applicants.fetch()
 
     def refresh_subscribers(self, *args):
+        self.refresh_font_family()
+        self.window.subscriber_info.subscribers.set(self.font_family["subscribers"])
+
+    def refresh_releases(self, *args):
+        self.refresh_font_family()
+        self.window.releases_info.log.set(self.font_family["releases"][::-1])
+
+    def refresh_font_family(self, *args):
         token = AppStorage("accessToken").retrieve()
         api = Ghostlines("v1", token=token)
-        font_family = api.font_family(self.family_id_storage.retrieve()).json()
-        self.window.subscribers.set(font_family["subscribers"])
+        self.font_family = api.font_family(self.family_id_storage.retrieve()).json()
+        self.resize_window_for_releases()
+
+    def resize_window_for_releases(self, *args):
+        if self.font_family["releases"]:
+            width = 900
+        else:
+            width = 600
+
+        left, top, _, height = self.window.getPosSize()
+        self.window.setPosSize((left, top, width, height))
 
     def open(self):
         if not self.font.info.familyName:
@@ -123,8 +170,8 @@ class ReleaseWindow(BaseWindowController):
         self.window.open()
 
     def send(self, *_):
-        subscribers = self.window.subscribers.get()
-        subscriber_ids = [subscribers[i]["id"] for i in self.window.subscribers.getSelection()]
+        subscribers = self.window.subscriber_info.subscribers.get()
+        subscriber_ids = [subscribers[i]["id"] for i in self.window.subscriber_info.subscribers.getSelection()]
         notes = self.note_draft_storage.retrieve()
         font_family_id = self.family_id_storage.retrieve()
         license_path = self.license_storage.retrieve()
@@ -165,6 +212,8 @@ class ReleaseWindow(BaseWindowController):
 
             if response.status_code == requests.codes.created:
                 message("{} was delivered".format(self.font.info.familyName))
+                
+                self.refresh_releases()
             else:
                 ErrorMessage("{} could not be delivered".format(self.font.info.familyName),
                              response.json()["errors"])
@@ -202,8 +251,8 @@ class ReleaseWindow(BaseWindowController):
         token = AppStorage("accessToken").retrieve()
         api = Ghostlines("v1", token=token)
 
-        for index in self.window.subscribers.getSelection():
-            subscriber = self.window.subscribers[index]
+        for index in self.window.subscriber_info.subscribers.getSelection():
+            subscriber = self.window.subscriber_info.subscribers[index]
             api.delete_subscriber(subscriber["id"])
 
         self.refresh_subscribers()
@@ -212,7 +261,7 @@ class ReleaseWindow(BaseWindowController):
         self.window.sheet.close()
 
     def update_send_button(self, sender):
-        self.window.release_info.send_button.amount = len(self.window.subscribers.getSelection())
+        self.window.release_info.send_button.amount = len(self.window.subscriber_info.subscribers.getSelection())
 
     @property
     def font_version(self):
@@ -234,7 +283,7 @@ class ReleaseWindow(BaseWindowController):
 
     @lazy_property
     def window(self):
-        return Window((600, 520),
+        return Window((900, 520),
                       autosaveName=self.__class__.__name__,
                       title=self.title)
 
@@ -242,3 +291,20 @@ class ReleaseWindow(BaseWindowController):
     def font_family(self):
         token = AppStorage("accessToken").retrieve()
         return Ghostlines("v1", token=token).font_family(self.family_id_storage.retrieve()).json()
+
+
+class ReleaseLog(List):
+    
+    def _wrapItem(self, release):
+        created_at = datetime.datetime.strptime(release["created_at"], "%Y-%m-%dT%H:%M:%S.%fZ")
+        item = {
+            'created_at': created_at.strftime("%Y/%m/%d %H:%M"),
+            'version': (release["version"] or u"\u2014"),
+            'subscriber_count': len(release["subscribers"])
+        }
+
+        return super(ReleaseLog, self)._wrapItem(item)
+
+
+if __name__ == "__main__":
+    ReleaseWindow(CurrentFont()).open()    
