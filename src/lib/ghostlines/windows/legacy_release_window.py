@@ -262,8 +262,12 @@ class MigrationAssistant(object):
                 if key in self.font.lib:
                     del self.font.lib[key]
 
-            LibStorage(self.font.lib, "releaseNotesDraft").store(LibStorage(self.font.lib, "release_notes_draft").retrieve())
-            LibStorage(self.font.lib, "licenseFilepath").store(LibStorage(self.font.lib, "license_filepath").retrieve())
+            old_note_storage = LibStorage(self.font.lib, "release_notes_draft")
+            old_license_storage = LibStorage(self.font.lib, "license_filepath")
+            LibStorage(self.font.lib, "releaseNotesDraft").store(old_note_storage.retrieve(default=None))
+            LibStorage(self.font.lib, "licenseFilepath").store(old_license_storage.retrieve(default=None))
+            old_note_storage.store(None)
+            old_license_storage.store(None)
 
             from ghostlines.windows.release_window import ReleaseWindow
 
