@@ -47,6 +47,8 @@ class ReleaseWindow(BaseWindowController):
 
         self.subscribers = self.font_family["subscribers"]
 
+        self.window.assignToDocument(self.font.document())
+
         self.window.background = Background((301, -52, 299, 52), alpha=0.05)
 
         self.window.release_info = Group((315, 15, 270, -15))
