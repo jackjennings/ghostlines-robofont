@@ -1,6 +1,7 @@
 Changelog
 =========
 
+* Update arguments passed to `RFont.generate` for forward compatibility
 * Attach font document to release window to ensure release window is closed with current font
 * Change deprecated designer key to openTypeNameDesigner in font info
 * Add release log to ReleaseWindow after a release is created

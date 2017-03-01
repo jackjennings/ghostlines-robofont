@@ -187,7 +187,7 @@ class ReleaseWindow(BaseWindowController):
 
             # Should be controlled which options are used somewhere
             otf_path = os.path.join(tmpdir, '{}.otf'.format(self.font.info.familyName))
-            self.font.generate(otf_path, "otf", decompose=True, checkOutlines=True, autohint=True)
+            self.font.generate(format="otf", path=otf_path, decompose=True, checkOutlines=True, autohint=True)
 
             progress.update('Sending via Ghostlines')
 
