@@ -1,3 +1,5 @@
-from ghostlines.toolbar import GhostlinesToolbar
+from ghostlines.toolbar.manager import Manager
+from ghostlines.toolbar.release_menu_item import ReleaseMenuItem
 
-GhostlinesToolbar("fontDidOpen", "newFontDidOpen")
+
+Manager(ReleaseMenuItem).on("fontDidOpen", "newFontDidOpen")
