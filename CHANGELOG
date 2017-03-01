@@ -1,6 +1,7 @@
 Changelog
 =========
 
+* Change deprecated designer key to openTypeNameDesigner in font info
 * Add release log to ReleaseWindow after a release is created
 * Change snake case to camel case for lib keys
 * Add MigrationAssistant to the legacy release window

@@ -58,7 +58,7 @@ class ApplicantList(Group):
     def activate(self, *args):
         response = Ghostlines('v0.1').enable_applicants({
             'font_name': self.font.info.familyName,
-            'designer': self.font.info.designer
+            'designer': self.font.info.openTypeNameDesigner
         })
 
         registry = response.json()

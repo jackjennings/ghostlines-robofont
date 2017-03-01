@@ -24,7 +24,7 @@ class CreateFontFamilyWindow(BaseWindowController):
         self.window.family_name = EditText((15, 40, -15, 22), font.info.familyName)
 
         self.window.designer_name_label = TextBox((15, 81, -15, 22), 'Designer', sizeStyle='small')
-        self.window.designer_name = EditText((15, 106, -15, 22), font.info.designer)
+        self.window.designer_name = EditText((15, 106, -15, 22), font.info.openTypeNameDesigner)
 
         self.window.create_button = Button((175, -38, 110, 22), 'Add Font', callback=self.create)
 
@@ -42,8 +42,8 @@ class CreateFontFamilyWindow(BaseWindowController):
             family_id_storage = LibStorage(self.font.lib, "fontFamilyId")
             family_id_storage.store(json["id"])
 
-            if self.font.info.designer is None:
-                self.font.info.designer = designer_name
+            if self.font.info.openTypeNameDesigner is None:
+                self.font.info.openTypeNameDesigner = designer_name
 
             if self.font.info.familyName is None:
                 self.font.info.familyName = name

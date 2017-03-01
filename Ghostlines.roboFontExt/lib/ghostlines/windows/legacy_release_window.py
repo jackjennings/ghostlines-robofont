@@ -102,7 +102,7 @@ class LegacyReleaseWindow(BaseWindowController):
             message("Family Name must be set", full_requirements_message)
             return
 
-        if not self.font.info.designer:
+        if not self.font.info.openTypeNameDesigner:
             message("Designer must be set", full_requirements_message)
             return
 
@@ -223,7 +223,7 @@ class MigrationAssistant(object):
         self.window.content.font_name_label = TextBox((0, 0, -0, 22), "Font Name", sizeStyle="small")
         self.window.content.font_name = TextBox((0, 19, -0, 22), self.font.info.familyName)
         self.window.content.font_author_label = TextBox((0, 55, -0, 22), "Designer", sizeStyle="small")
-        self.window.content.font_author = TextBox((0, 74, -0, 22), self.font.info.designer)
+        self.window.content.font_author = TextBox((0, 74, -0, 22), self.font.info.openTypeNameDesigner)
 
         self.window.content.recipients_label = TextBox((0, 114, -15, 22), "Subscribers", sizeStyle="small")
         self.window.content.recipients = List((0, 135, -0, 190), self.recipients, drawFocusRing=False, allowsEmptySelection=True)
@@ -246,7 +246,7 @@ class MigrationAssistant(object):
     def migrate(self, *_):
         token = AppStorage("accessToken").retrieve()
         api = Ghostlines("v1", token=token)
-        response = api.migrate(list(self.recipients), self.font.info.familyName, self.font.info.designer, self.roster_token)
+        response = api.migrate(list(self.recipients), self.font.info.familyName, self.font.info.openTypeNameDesigner, self.roster_token)
         json = response.json()
 
         if response.status_code == 201:

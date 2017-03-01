@@ -163,7 +163,7 @@ class ReleaseWindow(BaseWindowController):
             message("Family Name must be set", full_requirements_message)
             return
 
-        if not self.font.info.designer:
+        if not self.font.info.openTypeNameDesigner:
             message("Designer must be set", full_requirements_message)
             return
 
@@ -212,7 +212,7 @@ class ReleaseWindow(BaseWindowController):
 
             if response.status_code == requests.codes.created:
                 message("{} was delivered".format(self.font.info.familyName))
-                
+
                 self.refresh_releases()
             else:
                 ErrorMessage("{} could not be delivered".format(self.font.info.familyName),
@@ -294,7 +294,7 @@ class ReleaseWindow(BaseWindowController):
 
 
 class ReleaseLog(List):
-    
+
     def _wrapItem(self, release):
         created_at = datetime.datetime.strptime(release["created_at"], "%Y-%m-%dT%H:%M:%S.%fZ")
         item = {
@@ -307,4 +307,4 @@ class ReleaseLog(List):
 
 
 if __name__ == "__main__":
-    ReleaseWindow(CurrentFont()).open()    
+    ReleaseWindow(CurrentFont()).open()

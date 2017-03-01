@@ -7,7 +7,7 @@ class AttributionText(TextBox):
 
     def __init__(self, dimensions, font):
         font_name = font.info.familyName or ""
-        attribution = "{} by {}".format(font_name, font.info.designer)
+        attribution = "{} by {}".format(font_name, font.info.openTypeNameDesigner)
         attribution_attributes = {
             NSFontAttributeName: NSFont.systemFontOfSize_(NSFont.systemFontSize()),
             NSForegroundColorAttributeName: NSColor.whiteColor()
