@@ -16,7 +16,8 @@ class Manager(object):
             addObserver(self, "add_font_toolbar", event)
 
     def add_font_toolbar(self, info):
-        menu_item = self.item_class(CurrentFont())
+        window = CurrentFontWindow()
+        menu_item = self.item_class(CurrentFont(), window)
 
-        toobar = Toolbar(CurrentFontWindow())
-        toobar.add(menu_item, index=self.index)
+        toolbar = Toolbar(window)
+        toolbar.add(menu_item, index=self.index)

@@ -6,7 +6,8 @@ from ghostlines.windows.create_font_family_window import CreateFontFamilyWindow
 
 class ReleaseMenuItem(object):
 
-    def __init__(self, font):
+    def __init__(self, font, window):
+        self.window = window
         self.font = font
         self.label = 'Ghostlines'
         self.identifier = 'ghostlinesUpload'
