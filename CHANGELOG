@@ -1,6 +1,8 @@
 Changelog
 =========
 
+* Unload webview for comments when font window closes
+* Reuse webview for comments between activations
 * Added toolbar item for viewing feedback left on a font family
 * Move menu item creation into separate class
 * Update arguments passed to `RFont.generate` for forward compatibility
