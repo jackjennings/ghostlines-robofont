@@ -1,6 +1,9 @@
 Changelog
 =========
 
+0.5.0
+-----
+
 * Fix duplication of toolbar items for each successive window opening
 * Unload webview for comments when font window closes
 * Reuse webview for comments between activations
