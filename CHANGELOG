@@ -1,6 +1,7 @@
 Changelog
 =========
 
+* Fix duplication of toolbar items for each successive window opening
 * Unload webview for comments when font window closes
 * Reuse webview for comments between activations
 * Added toolbar item for viewing feedback left on a font family

@@ -13,13 +13,13 @@ class CommentsMenuItem(object):
         self.window = window
         self.font = font
         self.label = 'Feedback'
-        self.identifier = 'ghostlines_feedback'
+        self.identifier = 'ghostlinesFeedback'
         self.icon = 'feedback.pdf'
         self.enabled = False
 
         self.font_family_id_storage = LibStorage(self.font.lib, "fontFamilyId")
 
-        self.popover = Popover((300, 400), parentView=self.contentView)
+        self.popover = Popover((300, 400), parentView=self.content_view)
         self.popover.web = WebView((0, 0, -0, -0))
 
         # Binding to "should close" instead of "close", as the event doesn't
@@ -33,7 +33,7 @@ class CommentsMenuItem(object):
         if font_family_id is not None and token is not None and token is not '':
             window = self.window.window().getNSWindow()
             mouseDown = window.mouseLocationOutsideOfEventStream()
-            height = self.contentView.frame().size.height
+            height = self.content_view.frame().size.height
             rect = (mouseDown.x, height - 1, 1, 1)
             headers = {'Authorization': 'Bearer {}'.format(token)}
 
@@ -52,5 +52,5 @@ class CommentsMenuItem(object):
         return True
 
     @property
-    def contentView(self):
+    def content_view(self):
         return self.window.window().getNSWindow().contentView()
