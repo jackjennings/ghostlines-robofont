@@ -1,12 +1,12 @@
 # Ghostlines
 
-The extension for [the platform](https://ghostlines.pm). Currently in super-alpha-many-features-to-build-still stages of development.
+[Ghostlines](https://ghostlines.pm) is a project management tool for type designers. It integrates feedback into the drawing process. 
 
-Please read this blog post for a short introduction to Ghostlines the extension, and the aspirations for Ghostlines the platform: https://medium.com/@ghostlines_pm/what-is-ghostlines-bdd9536c8509#.1s5lwmxkr
+This is the extension for the platform. 
 
 ## Installation
 
-Either install the Ghostlines extension through [Mechanic](https://github.com/jackjennings/Mechanic), or download the .zip file and double click `Ghostlines.roboFontExt`.
+After making an account, you can install Ghostlines extension through [Mechanic](https://github.com/jackjennings/Mechanic), or through [our installation script](robofont-script://raw.githubusercontent.com/ghostlines/ghostlines-robofont/v1/install.py). 
 
 ## Feature Requests and Bug Reports
 
