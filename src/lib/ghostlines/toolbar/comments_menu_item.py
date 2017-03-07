@@ -9,9 +9,9 @@ from ghostlines.storage.app_storage import AppStorage
 
 class CommentsMenuItem(object):
 
-    def __init__(self, font, window):
+    def __init__(self, window):
         self.window = window
-        self.font = font
+        self.font = window._font
         self.label = 'Feedback'
         self.identifier = 'ghostlinesFeedback'
         self.icon = 'feedback.pdf'

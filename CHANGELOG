@@ -1,6 +1,7 @@
 Changelog
 =========
 
+* Fix toolbar items opening views for incorrect fonts
 * Fix sending to a subset of subscribers in release window
 * Stub in Ghostlines help docs
 

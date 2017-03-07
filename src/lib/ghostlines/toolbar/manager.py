@@ -1,5 +1,5 @@
 from mojo.events import addObserver
-from mojo.roboFont import CurrentFont
+from mojo.UI import AllFontWindows
 
 from ghostlines.toolbar.toolbar import Toolbar
 
@@ -17,7 +17,7 @@ class Manager(object):
 
     def add_font_toolbar(self, info):
         window = self.window_getter()
-        item = self.item_class(CurrentFont(), window)
+        item = self.item_class(window)
 
         toolbar = Toolbar(info['toolbarItems'])
         toolbar.add(item, index=self.index)
