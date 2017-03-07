@@ -173,9 +173,7 @@ class ReleaseWindow(BaseWindowController):
 
     def send(self, *_):
         subscribers = self.window.subscriber_info.subscribers.get()
-        print self.window.subscriber_info.subscribers.getSelection()
         subscriber_ids = [subscribers[i]["id"] for i in self.window.subscriber_info.subscribers.getSelection()]
-        print subscriber_ids
         notes = self.note_draft_storage.retrieve()
         font_family_id = self.family_id_storage.retrieve()
         license_path = self.license_storage.retrieve()
