@@ -1,0 +1,34 @@
+<!--
+Thank you for contributing!
+
+Have a usage question?
+======================
+The issue tracker isn't the best place for usage questions. We're happy to answer questions either by:
+
+- Sending us an email: info@ghostlines.pm
+- Visiting our website and clicking "Ask a Question"
+
+
+Think you found a bug?
+======================
+The best bug report is a failing test in the repository as a pull request. Otherwise, please use the "BUG REPORT" template below. Please assign the "bug" label to your issue.
+
+
+Have a feature request?
+=======================
+Remove the template from below and provide thoughtful commentary on what this feature would help you accomplish. What will it allow you to do that you can't do today? How will it make current work-arounds straightforward? What potential bugs and edge cases does it help to avoid? etc. Please assign the "feature request" label to your issue.
+-->
+
+<!-- BUG REPORT TEMPLATE -->
+## Version
+X.X.X
+
+## Expected Behavior
+
+## Actual Behavior
+
+\`\`\`
+~~ Paste stack trace from Output Window here, if any ~~
+\`\`\`
+
+## Steps to reproduce
