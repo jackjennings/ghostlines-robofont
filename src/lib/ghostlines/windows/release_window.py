@@ -173,7 +173,9 @@ class ReleaseWindow(BaseWindowController):
 
     def send(self, *_):
         subscribers = self.window.subscriber_info.subscribers.get()
+        print self.window.subscriber_info.subscribers.getSelection()
         subscriber_ids = [subscribers[i]["id"] for i in self.window.subscriber_info.subscribers.getSelection()]
+        print subscriber_ids
         notes = self.note_draft_storage.retrieve()
         font_family_id = self.family_id_storage.retrieve()
         license_path = self.license_storage.retrieve()
@@ -200,7 +202,7 @@ class ReleaseWindow(BaseWindowController):
                 params['otfs'] = [(os.path.basename(otf_path), otf.read(), "application/octet-stream")]
 
             if subscriber_ids:
-                params['subscriber_ids'] = subscriber_ids
+                params['subscriber_ids[]'] = subscriber_ids
 
             if self.license_exists:
                 with open(license_path, 'rb') as license:
