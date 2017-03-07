@@ -18,7 +18,7 @@
 		<key>repository</key>
 		<string>ghostlines/ghostlines-robofont</string>
 		<key>summary</key>
-		<string>Integrated project management for type design</string>
+		<string>Integrates feedback from friends and peers into your drawing process</string>
 	</dict>
 	<key>developer</key>
 	<string>Ghostlines</string>
@@ -33,7 +33,7 @@
 	<key>name</key>
 	<string>Ghostlines</string>
 	<key>timeStamp</key>
-	<real>1488871697.020687</real>
+	<real>1488902450.74948</real>
 	<key>version</key>
 	<string>1.0.0</string>
 </dict>
