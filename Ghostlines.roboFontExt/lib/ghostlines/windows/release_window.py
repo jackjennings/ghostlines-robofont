@@ -38,7 +38,7 @@ filetypes = {
 @Authentication.require
 class ReleaseWindow(BaseWindowController):
 
-    def __init__(self, font):
+    def __init__(self, font, document=None):
         self.font = font
 
         self.note_draft_storage = LibStorage(self.font.lib, "releaseNotesDraft")
@@ -47,7 +47,7 @@ class ReleaseWindow(BaseWindowController):
 
         self.subscribers = self.font_family["subscribers"]
 
-        self.window.assignToDocument(self.font.document())
+        self.window.assignToDocument(document)
 
         self.window.background = Background((301, -52, 299, 52), alpha=0.05)
 
@@ -173,9 +173,7 @@ class ReleaseWindow(BaseWindowController):
 
     def send(self, *_):
         subscribers = self.window.subscriber_info.subscribers.get()
-        print self.window.subscriber_info.subscribers.getSelection()
         subscriber_ids = [subscribers[i]["id"] for i in self.window.subscriber_info.subscribers.getSelection()]
-        print subscriber_ids
         notes = self.note_draft_storage.retrieve()
         font_family_id = self.family_id_storage.retrieve()
         license_path = self.license_storage.retrieve()

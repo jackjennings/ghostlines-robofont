@@ -6,9 +6,9 @@ from ghostlines.windows.create_font_family_window import CreateFontFamilyWindow
 
 class ReleaseMenuItem(object):
 
-    def __init__(self, font, window):
+    def __init__(self, window):
         self.window = window
-        self.font = font
+        self.font = window._font
         self.label = 'Ghostlines'
         self.identifier = 'ghostlinesUpload'
 
@@ -16,7 +16,7 @@ class ReleaseMenuItem(object):
         if self.has_legacy_data(self.font):
             LegacyReleaseWindow(self.font).open()
         elif self.has_family(self.font):
-            ReleaseWindow(self.font).open()
+            ReleaseWindow(self.font, document=self.window.document).open()
         else:
             CreateFontFamilyWindow(self.font, success_window=ReleaseWindow).open()
 
