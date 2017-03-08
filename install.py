@@ -13,7 +13,7 @@ def unzip(zip_file_path, dest_dir):
     zipped_dir = zf.ZipFile(zip_file_path)
     for name in zipped_dir.namelist():
         (dir_name, file_name) = os.path.split(name)
-        
+
         if file_name == '':
             # so this file is a directory
             new_dir = dest_dir + '/' + dir_name
@@ -31,7 +31,7 @@ def download(url, dest_dir):
     zip_path = temp + dest_dir + '.zip'
     response = urlopen(url)
     CHUNK = 16 * 1024
-    
+
     with open(zip_path, 'wb') as f:
         while True:
             chunk = response.read(CHUNK)
@@ -52,7 +52,7 @@ def install_extension(url, dest_dir, ext_name):
 ########## end functions, now the script ##########
 
 install_extension('https://github.com/jackjennings/Mechanic/archive/master.zip', 'Mechanic-master', 'Mechanic.roboFontExt')
-install_extension('https://github.com/ghostlines/ghostlines-robofont/archive/v1.zip', 'ghostlines-robofont-1', 'Ghostlines.roboFontExt')
+install_extension('https://github.com/ghostlines/ghostlines-robofont/archive/master.zip', 'ghostlines-robofont-master', 'Ghostlines.roboFontExt')
 
 try:
     import mechanic
