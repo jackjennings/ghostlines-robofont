@@ -1,6 +1,7 @@
 Changelog
 =========
 
+* Fix ReleaseWindow crash when no parent document is supplied. #35
 * Update install.py script to get master branch
 * Update Mechanic description
 
