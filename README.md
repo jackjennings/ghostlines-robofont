@@ -6,7 +6,7 @@ This is the extension for the platform.
 
 ## Installation
 
-After making an account, you can install Ghostlines extension through [Mechanic](https://github.com/jackjennings/Mechanic), or through [our installation script](robofont-script://raw.githubusercontent.com/ghostlines/ghostlines-robofont/v1/install.py). 
+After making an account, you can install Ghostlines extension through [Mechanic](https://github.com/jackjennings/Mechanic), or through the [installation script](http://ghostlines.pm/install/).
 
 ## Feature Requests and Bug Reports
 
