@@ -47,7 +47,8 @@ class ReleaseWindow(BaseWindowController):
 
         self.subscribers = self.font_family["subscribers"]
 
-        self.window.assignToDocument(document)
+        if document is not None:
+            self.window.assignToDocument(document)
 
         self.window.background = Background((301, -52, 299, 52), alpha=0.05)
 
